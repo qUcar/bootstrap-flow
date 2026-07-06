@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Bootstrap Flow — Prompt Üretici</title>
+<style>
+:root{
+  --bg:#f5f5f2; --card:#ffffff; --border:#e2e1db; --text:#1f1f1e; --text-2:#6b6a65; --text-3:#9b9a93;
+  --accent:#4f63d2; --accent-bg:#eceefb; --accent-text:#3648a8;
+  --ok-bg:#e7f6ec; --ok-text:#1c7c3f; --warn-bg:#fdf3e3; --warn-text:#9a6b16;
+  --req-bad:#c96a6a; --req-bad-bg:#f9e9e9; --req-ok:#4b9e77; --req-ok-bg:#e7f4ee;
+  --mono:ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#151517; --card:#1e1e22; --border:#34343b; --text:#ebebe9; --text-2:#a3a3ab; --text-3:#6f6f78;
+  --accent:#7c8cf0; --accent-bg:#2b3050; --accent-text:#aab6ff;
+  --ok-bg:#1d3527; --ok-text:#7fd49b; --warn-bg:#3a2f18; --warn-text:#e4b45e;
+  --req-bad:#c97777; --req-bad-bg:#3b2626; --req-ok:#61b389; --req-ok-bg:#20372b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);transition:background .2s,color .2s}
+.wrap{max-width:1160px;margin:0 auto;padding:20px 24px 48px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:4px 0 20px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px}
+.brand b{font-size:17px;font-weight:600}
+.brand span{font-size:12.5px;color:var(--text-3)}
+.hdr-ctl{display:flex;align-items:center;gap:8px}
+.seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;padding:6px 13px;font-size:12.5px;color:var(--text-2);cursor:pointer;font-family:inherit}
+.seg button.on{background:var(--accent-bg);color:var(--accent-text);font-weight:600}
+.icon-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text-2);cursor:pointer}
+.icon-btn:hover{color:var(--text);border-color:var(--text-3)}
+main{display:grid;gap:20px}
+@media(min-width:1020px){main{grid-template-columns:430px minmax(0,1fr);align-items:start}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+h2{font-size:14px;font-weight:600;margin:0 0 14px}
+label{font-size:12px;color:var(--text-2);display:block;margin:0 0 4px}
+.field{margin-bottom:12px}
+.lbl{display:flex;align-items:center;gap:6px;margin:0 0 4px}
+.lbl label{margin:0}
+.info{width:15px;height:15px;border-radius:50%;border:1px solid var(--text-3);color:var(--text-3);font-size:10px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;cursor:help;position:relative;flex:none;line-height:1;user-select:none}
+.info:hover,.info:focus{border-color:var(--accent);color:var(--accent-text);outline:none}
+.tip{display:none;position:absolute;bottom:calc(100% + 8px);left:-8px;z-index:30;width:min(240px,calc(100vw - 48px));background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:12px;line-height:1.5;color:var(--text);font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.14);cursor:default;text-align:left}
+.info:hover .tip,.info:focus .tip,.info.open .tip{display:block}
+.tip-ex{display:block;margin-top:5px;font-family:var(--mono);font-size:11.5px;color:var(--text-2)}
+.grid2 .field:nth-child(even) .tip{left:auto;right:-8px}
+.check-row{display:flex;align-items:center;gap:8px;margin:14px 0 4px}
+.check-row .check{margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+input[type=text],textarea,select{width:100%;padding:8px 10px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:8px;outline:none}
+textarea{resize:vertical;min-height:56px;line-height:1.5}
+input[type=text]:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+input[type=text].req-empty,textarea.req-empty,select.req-empty{border-color:var(--req-bad)}
+input[type=text].req-filled,textarea.req-filled,select.req-filled{border-color:var(--req-ok)}
+input[type=text].req-empty:focus,textarea.req-empty:focus,select.req-empty:focus{border-color:var(--req-bad);box-shadow:0 0 0 3px var(--req-bad-bg)}
+input[type=text].req-filled:focus,textarea.req-filled:focus,select.req-filled:focus{border-color:var(--req-ok);box-shadow:0 0 0 3px var(--req-ok-bg)}
+.mono{font-family:var(--mono);font-size:13px}
+.check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text);margin:14px 0 4px;cursor:pointer}
+.check input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+.form-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.form-foot small{font-size:12px;color:var(--text-3)}
+.ghost-btn{border:1px solid var(--border);background:none;color:var(--text-2);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:inherit}
+.ghost-btn:hover{color:var(--text);border-color:var(--text-3)}
+.out-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.out-head b{font-size:14px;font-weight:600}
+.out-head span{font-size:12.5px;color:var(--text-3)}
+.warn{display:none;background:var(--warn-bg);color:var(--warn-text);font-size:12.5px;padding:8px 12px;border-radius:8px;margin:8px 0 4px}
+.warn.show{display:block}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:12px}
+.pc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pc-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.badge{background:var(--accent-bg);color:var(--accent-text);font-size:12px;font-weight:600;padding:3px 9px;border-radius:6px;white-space:nowrap}
+.pc-count{font-size:12px;color:var(--text-3)}
+.copy-btn{border:1px solid var(--border);background:none;color:var(--text);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;white-space:nowrap}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent-text)}
+.copy-btn.ok{background:var(--ok-bg);border-color:transparent;color:var(--ok-text)}
+.guide{font-size:12.5px;color:var(--text-2);margin:8px 0 10px;line-height:1.5}
+pre{margin:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--text-2);max-height:250px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+footer{margin-top:28px;font-size:12px;color:var(--text-3);text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="logo">B</div>
+    <div><b>Bootstrap Flow</b><br><span id="t-subtitle">prompt üretici</span></div>
+  </div>
+  <div class="hdr-ctl">
+    <div class="seg" id="lang-seg">
+      <button type="button" data-lang="tr">TR</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+    <button type="button" class="icon-btn" id="theme-btn" aria-label="Tema">
+      <svg id="ic-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg id="ic-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+<section class="card">
+  <h2 id="t-formTitle">Proje bilgileri</h2>
+  <div class="field"><div class="lbl"><label id="l-name" for="f-name">Proje adı</label><span class="info" tabindex="0">i<span class="tip" id="tip-name"></span></span></div><input type="text" id="f-name"></div>
+  <div class="field"><div class="lbl"><label id="l-root" for="f-root">Kök klasör yolu</label><span class="info" tabindex="0">i<span class="tip" id="tip-root"></span></span></div><input type="text" id="f-root" class="mono"></div>
+  <div class="field"><div class="lbl"><label id="l-desc" for="f-desc">Kısa açıklama</label><span class="info" tabindex="0">i<span class="tip" id="tip-desc"></span></span></div><textarea id="f-desc"></textarea></div>
+  <div class="grid2">
+    <div class="field"><div class="lbl"><label id="l-type" for="f-type">Proje tipi</label><span class="info" tabindex="0">i<span class="tip" id="tip-type"></span></span></div><select id="f-type"></select></div>
+    <div class="field"><div class="lbl"><label id="l-tech" for="f-tech">Teknoloji</label><span class="info" tabindex="0">i<span class="tip" id="tip-tech"></span></span></div><input type="text" id="f-tech"></div>
+  </div>
+  <div class="field"><div class="lbl"><label id="l-mvp" for="f-mvp">MVP hedefi</label><span class="info" tabindex="0">i<span class="tip" id="tip-mvp"></span></span></div><textarea id="f-mvp"></textarea></div>
+  <div class="grid2">
+    <div class="field"><div class="lbl"><label id="l-agent" for="f-agent">Agent tipi</label><span class="info" tabindex="0">i<span class="tip" id="tip-agent"></span></span></div><select id="f-agent"></select></div>
+    <div class="field"><div class="lbl"><label id="l-promptLang" for="f-promptlang">Prompt dili</label><span class="info" tabindex="0">i<span class="tip" id="tip-promptLang"></span></span></div><select id="f-promptlang"></select></div>
+  </div>
+  <div class="grid2">
+    <div class="field"><div class="lbl"><label id="l-respLang" for="f-resplang">Cevap dili</label><span class="info" tabindex="0">i<span class="tip" id="tip-respLang"></span></span></div><select id="f-resplang"></select></div>
+    <div class="field"><div class="lbl"><label id="l-notes" for="f-notes">Ek notlar (opsiyonel)</label><span class="info" tabindex="0">i<span class="tip" id="tip-notes"></span></span></div><textarea id="f-notes" style="min-height:38px"></textarea></div>
+  </div>
+  <div class="check-row"><label class="check"><input type="checkbox" id="f-code"><span id="l-code">Bootstrap sırasında kod yazılsın</span></label><span class="info" tabindex="0">i<span class="tip" id="tip-code"></span></span></div>
+  <div class="form-foot">
+    <small id="t-autosave">Form otomatik kaydedilir</small>
+    <button type="button" class="ghost-btn" id="clear-btn">Formu temizle</button>
+  </div>
+</section>
+
+<section>
+  <div class="out-head"><b id="t-outTitle">Üretilen promptlar</b><span id="t-outHint">sırayla agent'a verin</span></div>
+  <div class="warn" id="warn"></div>
+  <div class="pcard" id="pc-0">
+    <div class="pc-top"><div class="pc-meta"><span class="badge" id="b-0">1. Anlama ve plan</span><span class="pc-count" id="c-0"></span></div><button type="button" class="copy-btn" data-i="0">Kopyala</button></div>
+    <p class="guide" id="g-0"></p>
+    <pre id="p-0"></pre>
+  </div>
+  <div class="pcard" id="pc-1">
+    <div class="pc-top"><div class="pc-meta"><span class="badge" id="b-1">2. Bootstrap</span><span class="pc-count" id="c-1"></span></div><button type="button" class="copy-btn" data-i="1">Kopyala</button></div>
+    <p class="guide" id="g-1"></p>
+    <pre id="p-1"></pre>
+  </div>
+  <div class="pcard" id="pc-2">
+    <div class="pc-top"><div class="pc-meta"><span class="badge" id="b-2">3. Doğrulama</span><span class="pc-count" id="c-2"></span></div><button type="button" class="copy-btn" data-i="2">Kopyala</button></div>
+    <p class="guide" id="g-2"></p>
+    <pre id="p-2"></pre>
+  </div>
+</section>
+</main>
+
+<footer id="t-footer"></footer>
+</div>
+
+<script>
+"use strict";
+const LS_KEY = "bsf_state_v1";
+const $ = id => document.getElementById(id);
+
+const I18N = {
+  tr: {
+    subtitle: "prompt üretici",
+    formTitle: "Proje bilgileri",
+    name: "Proje adı", root: "Kök klasör yolu", desc: "Kısa açıklama", type: "Proje tipi",
+    tech: "Teknoloji", mvp: "MVP hedefi", agent: "Agent tipi", promptLang: "Prompt dili",
+    respLang: "Cevap dili", notes: "Ek notlar (opsiyonel)", code: "Bootstrap sırasında kod yazılsın",
+    autosave: "Form otomatik kaydedilir", clear: "Formu temizle",
+    confirmClear: "Tüm form alanları temizlensin mi?",
+    outTitle: "Üretilen promptlar", outHint: "sırayla agent'a verin",
+    missing: "Eksik alanlar:",
+    copy: "Kopyala", copied: "Kopyalandı ✓", chars: "karakter",
+    p1: "1. Anlama ve plan", p2: "2. Bootstrap", p3: "3. Doğrulama",
+    g1: "İlk bu promptu verin. Agent plan sunar ve onayınızı bekler; dosya oluşturmaz.",
+    g2: "Planı onayladıktan sonra verin. Agent klasör ve dosyaları oluşturur, rapor verir.",
+    g3: "Bootstrap bitince, tercihen yeni bir agent oturumunda verin. Agent denetler ve düzeltme için onay bekler.",
+    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.3",
+    phName: "Örn. VisionVp", phRoot: "C:\\Projeler\\proje-adi", phDesc: "Projenin tek paragraflık özeti", phNotes: "Riskler, özel kurallar, mevcut durum…",
+    typePlaceholder: "Seçin…",
+    typeNames: { vision: "Vision / görüntü işleme", ai: "AI / makine öğrenmesi", web: "Web uygulaması", scraping: "Scraping / veri toplama", lead: "Lead generation", agent: "Agent sistemi", automation: "Yazılım otomasyonu", other: "Diğer" },
+    promptLangs: { en: "English (önerilen)", tr: "Türkçe" },
+    respLangs: { tr: "Türkçe", en: "English" },
+    agentOther: "Diğer agent",
+    infoLabel: "Bilgi",
+    tips: {
+      name: { t: "Projenin kısa adı. Üretilen promptlarda ve tüm kök dosyalarda kullanılır.", e: "Örn: HizliNot" },
+      root: { t: "Projenin kurulacağı klasörün tam yolu. Agent dosya ve klasörleri buraya oluşturur.", e: "Örn: C:\\Projeler\\HizliNot" },
+      desc: { t: "Projeyi bir-iki cümleyle anlatın; agent kapsamı ve amacı buradan anlar.", e: "Örn: Terminalden hızlı not almayı sağlayan araç" },
+      type: { t: "Projenin kategorisi. Seçince Teknoloji ve MVP alanlarında örnek ipuçları belirir.", e: "Örn: Yazılım otomasyonu" },
+      tech: { t: "Kullanılacak programlama dili ve ana araçlar.", e: "Örn: Python 3.10, OpenCV" },
+      mvp: { t: "İlk çalışan sürümün tek cümlelik hedefi. Görev planı ve yol haritası buna göre kurulur.", e: "Örn: Notları JSON dosyasında saklayan CLI" },
+      agent: { t: "Üretilen promptları vereceğiniz yapay zekâ kodlama aracı.", e: "Örn: Claude Code" },
+      promptLang: { t: "Üretilen prompt metninin dili. English çoğu agent'ta daha tutarlı sonuç verir.", e: "Örn: English" },
+      respLang: { t: "Agent'ın cevaplarının ve oluşturacağı dosya içeriklerinin dili.", e: "Örn: Türkçe" },
+      notes: { t: "Riskler, özel kurallar veya mevcut durum gibi ek bilgiler. Boş bırakılabilir.", e: "Örn: Üçüncü parti kütüphane kullanılmayacak" },
+      code: { t: "İşaretlenirse agent bootstrap sırasında src/ içine minimal bir başlangıç kodu da yazar; işaretlenmezse yalnızca dosya iskeleti kurulur.", e: "Örn: Kapalı bırakın — önce plan, kod sonra" }
+    }
+  },
+  en: {
+    subtitle: "prompt generator",
+    formTitle: "Project details",
+    name: "Project name", root: "Root folder path", desc: "Short description", type: "Project type",
+    tech: "Tech stack", mvp: "MVP goal", agent: "Agent type", promptLang: "Prompt language",
+    respLang: "Response language", notes: "Extra notes (optional)", code: "Allow code writing during bootstrap",
+    autosave: "Form is saved automatically", clear: "Clear form",
+    confirmClear: "Clear all form fields?",
+    outTitle: "Generated prompts", outHint: "give to the agent in order",
+    missing: "Missing fields:",
+    copy: "Copy", copied: "Copied ✓", chars: "characters",
+    p1: "1. Understand & plan", p2: "2. Bootstrap", p3: "3. Validation",
+    g1: "Give this prompt first. The agent presents a plan and waits for your approval; it creates nothing.",
+    g2: "Give after approving the plan. The agent creates folders and files, then reports.",
+    g3: "Run after bootstrap, preferably in a fresh agent session. The agent audits and waits for approval to fix.",
+    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.3",
+    phName: "e.g. VisionVp", phRoot: "C:\\Projects\\my-project", phDesc: "One-paragraph summary of the project", phNotes: "Risks, special rules, current state…",
+    typePlaceholder: "Select…",
+    typeNames: { vision: "Vision / image processing", ai: "AI / machine learning", web: "Web application", scraping: "Scraping / data collection", lead: "Lead generation", agent: "Agent system", automation: "Software automation", other: "Other" },
+    promptLangs: { en: "English (recommended)", tr: "Turkish" },
+    respLangs: { tr: "Turkish", en: "English" },
+    agentOther: "Other agent",
+    infoLabel: "Info",
+    tips: {
+      name: { t: "Short name of the project. Used in the generated prompts and all root files.", e: "e.g. QuickNote" },
+      root: { t: "Full path of the folder where the project will live. The agent creates files and folders here.", e: "e.g. C:\\Projects\\QuickNote" },
+      desc: { t: "Describe the project in one or two sentences; the agent derives scope and purpose from this.", e: "e.g. A tool for taking quick notes from the terminal" },
+      type: { t: "Category of the project. Selecting it shows example hints in the Tech stack and MVP fields.", e: "e.g. Software automation" },
+      tech: { t: "Programming language and main tools to be used.", e: "e.g. Python 3.10, OpenCV" },
+      mvp: { t: "One-sentence goal of the first working version. The task plan and roadmap are built from this.", e: "e.g. CLI that stores notes in a JSON file" },
+      agent: { t: "The AI coding tool you will paste the generated prompts into.", e: "e.g. Claude Code" },
+      promptLang: { t: "Language of the generated prompt text. English tends to be more consistent across agents.", e: "e.g. English" },
+      respLang: { t: "Language of the agent's replies and of the file contents it creates.", e: "e.g. Turkish" },
+      notes: { t: "Extra information such as risks, special rules or current state. Can be left empty.", e: "e.g. No third-party libraries" },
+      code: { t: "If checked, the agent also writes a minimal starting point into src/ during bootstrap; if unchecked, only the file skeleton is created.", e: "e.g. Leave off — plan first, code later" }
+    }
+  }
+};
+
+const TYPE_KEYS = ["vision", "ai", "web", "scraping", "lead", "agent", "automation", "other"];
+const AGENTS = ["Claude Code", "Fable", "Codex", "Cursor"];
+
+const TYPE_HINTS = {
+  vision: {
+    tr: { tech: "Python, OpenCV, PyQt", mvp: "Kameradan alınan görüntüde parça konumunu tespit edip robot koordinatı üreten prototip" },
+    en: { tech: "Python, OpenCV, PyQt", mvp: "Prototype that detects part position from camera images and outputs robot coordinates" }
+  },
+  ai: {
+    tr: { tech: "Python, PyTorch, FastAPI", mvp: "Etiketli veriyle eğitilen ve API üzerinden tahmin dönen ilk model" },
+    en: { tech: "Python, PyTorch, FastAPI", mvp: "First model trained on labeled data, serving predictions over an API" }
+  },
+  web: {
+    tr: { tech: "HTML, CSS, JavaScript, React", mvp: "Kayıt ve girişin çalıştığı, ana akışı tamamlanmış ilk sürüm" },
+    en: { tech: "HTML, CSS, JavaScript, React", mvp: "First version with working sign-up, login and the core flow" }
+  },
+  scraping: {
+    tr: { tech: "Python, Requests, Playwright", mvp: "Hedef siteden veriyi çekip CSV'ye kaydeden ilk akış" },
+    en: { tech: "Python, Requests, Playwright", mvp: "First flow that scrapes the target site and saves data to CSV" }
+  },
+  lead: {
+    tr: { tech: "Python, Google Sheets API, e-posta otomasyonu", mvp: "Hedef listeden lead toplayıp puanlayan ilk akış" },
+    en: { tech: "Python, Google Sheets API, email automation", mvp: "First flow that collects and scores leads from a target list" }
+  },
+  agent: {
+    tr: { tech: "Python, Claude API, MCP", mvp: "Tek bir görevi uçtan uca tamamlayan ilk agent akışı" },
+    en: { tech: "Python, Claude API, MCP", mvp: "First agent flow that completes one task end to end" }
+  },
+  automation: {
+    tr: { tech: "Python, PowerShell", mvp: "Manuel bir süreci uçtan uca otomatikleştiren ilk betik" },
+    en: { tech: "Python, PowerShell", mvp: "First script that automates a manual process end to end" }
+  },
+  other: { tr: { tech: "", mvp: "" }, en: { tech: "", mvp: "" } }
+};
+
+const CORE_FILES = "README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, CLAUDE.md, AGENTS.md, CODEX.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, .env.example, .gitignore";
+const CORE_DIRS = "docs/, src/, tests/, scripts/, configs/, prompts/, skills/, .agent/";
+const DIR_PURPOSES_EN = "docs/ documentation, src/ application code, tests/ tests, scripts/ helper scripts, configs/ configuration files, prompts/ reusable agent prompts, skills/ agent skill definitions, .agent/ agent working notes and state";
+const DIR_PURPOSES_TR = "docs/ dokümantasyon, src/ uygulama kodu, tests/ testler, scripts/ yardımcı betikler, configs/ yapılandırma dosyaları, prompts/ yeniden kullanılabilir agent promptları, skills/ agent yetenek tanımları, .agent/ agent çalışma notları ve durumu";
+
+const RESP_STRINGS = {
+  en: {
+    p1struct: `1. Understanding (max 10 lines)
+2. Open questions (numbered)
+3. Risks (max 5)
+4. Bootstrap plan — table with columns: Path | Type (file/folder) | Purpose (one line) | Core/Adapted/Optional
+5. Approval request`,
+    p1q: `"Do you approve this plan as-is, or should I adjust it? I will not create anything until you confirm."`,
+    p2struct: `1. Tree view of the created structure
+2. Table: Path | Status (created/skipped-existing) | One-line content summary
+3. Anything adapted or skipped, with reason
+4. Suggested immediate next step for the project`,
+    p2end: `"Bootstrap complete. Run the Validation prompt to verify the result."`,
+    p3struct: `1. Audit table — columns: Check | Status (PASS/WARN/FAIL) | Evidence (file + finding) | Suggested fix
+2. Overall verdict: READY or NEEDS FIXES
+3. If NEEDS FIXES: numbered fix list ordered by severity (FAIL items first)`,
+    p3q: `"Shall I apply the fixes listed above? I will not modify anything until you confirm."`
+  },
+  tr: {
+    p1struct: `1. Anlayış (en fazla 10 satır)
+2. Açık sorular (numaralı)
+3. Riskler (en fazla 5)
+4. Bootstrap planı — tablo sütunları: Yol | Tip (dosya/klasör) | Amaç (tek satır) | Çekirdek/Uyarlanmış/Opsiyonel
+5. Onay talebi`,
+    p1q: `"Bu planı olduğu gibi onaylıyor musun, yoksa düzenleyeyim mi? Sen onaylamadan hiçbir şey oluşturmayacağım."`,
+    p2struct: `1. Oluşturulan yapının ağaç görünümü
+2. Tablo: Yol | Durum (oluşturuldu/atlandı-mevcut) | Tek satırlık içerik özeti
+3. Uyarlanan veya atlanan her şey, gerekçesiyle
+4. Proje için önerilen ilk sonraki adım`,
+    p2end: `"Bootstrap tamamlandı. Sonucu doğrulamak için Validation promptunu çalıştırın."`,
+    p3struct: `1. Denetim tablosu — sütunlar: Kontrol | Durum (PASS/WARN/FAIL) | Kanıt (dosya + bulgu) | Önerilen düzeltme
+2. Genel hüküm: READY veya NEEDS FIXES
+3. NEEDS FIXES ise: önem sırasına göre numaralı düzeltme listesi (önce FAIL maddeleri)`,
+    p3q: `"Yukarıda listelenen düzeltmeleri uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`
+  }
+};
+
+const T_EN = {
+  p1: d => `# ROLE
+You are a senior software architect and project bootstrap specialist running inside ${d.agent}.
+
+# PROJECT CONTEXT
+- Project name: ${d.name}
+- Root folder: ${d.root}
+- Description: ${d.desc}
+- Project type: ${d.type}
+- Tech stack: ${d.tech}
+- MVP goal: ${d.mvp}
+- Code writing allowed during bootstrap: ${d.code}
+- Extra notes: ${d.notes}
+
+# PHASE
+This is PHASE 1 of 3 (Understand → Bootstrap → Validate).
+HARD RULE: In this phase you must NOT create, modify or delete any file or folder.
+
+# TASK
+1. If ${d.root} exists and is not empty, briefly inspect its current structure first and take it into account.
+2. Synthesize your understanding of the project: goal, scope, constraints, target MVP.
+3. List every missing, ambiguous or conflicting point as a numbered question.
+4. List the top risks for this project type (max 5, one line each).
+5. Propose the bootstrap plan you will execute in Phase 2. Base it on this core set and adapt ONLY with an explicit reason — never silently add or drop items:
+   - Core files: ${CORE_FILES}
+   - Core folders: ${CORE_DIRS}
+   Folder purposes: ${DIR_PURPOSES_EN}.
+6. If the project type clearly needs an extra file (e.g. CALIBRATION.md for vision, DATASET.md for AI, COMPLIANCE_GUARDRAILS.md for lead generation), propose it as OPTIONAL with a reason. Do not include it in the plan unless the user approves.
+
+# OUTPUT FORMAT
+Respond in ${d.resp}. Use exactly this structure, with these section titles:
+${d.struct1}
+
+# STOP RULE
+End your response with exactly this question and then stop:
+${d.q1}
+Wait for explicit user approval. Do not proceed on your own.`,
+
+  p2: d => `# ROLE
+Same architect, PHASE 2 of 3. The user has APPROVED the bootstrap plan from Phase 1.
+If the user requested changes to the plan, apply those changes; otherwise follow the approved plan exactly.
+
+# PROJECT CONTEXT
+- Project name: ${d.name}
+- Root folder: ${d.root}
+- Description: ${d.desc}
+- Project type: ${d.type}
+- Tech stack: ${d.tech}
+- MVP goal: ${d.mvp}
+- Extra notes: ${d.notes}
+
+# TASK
+Create the approved project skeleton inside ${d.root}.
+
+## Rules
+1. Create the core folders first: ${CORE_DIRS}. Put a .gitkeep file in every folder that would otherwise be empty.
+   Folder purposes: ${DIR_PURPOSES_EN}. Document these purposes in README.md's repo layout section.
+2. Create every core file with REAL initial content derived from the project context, written in ${d.resp}. Forbidden: empty files, files containing only "TODO", unresolved placeholders.
+3. Minimum content per file:
+   - README.md        → what the project is, MVP goal, how the repo is organized, doc links
+   - PROJECT_BRIEF.md → goal, target user, MVP definition, explicitly out-of-scope items
+   - REQUIREMENTS.md  → functional + non-functional MVP requirements from the context
+   - DESIGN.md        → initial architecture: components, data flow, key constraints
+   - TASKS.md         → phased checkbox task list leading to the MVP goal
+   - ROADMAP.md       → MVP → v1 → v2 outline
+   - DECISIONS.md     → ADR-style log; first entry = the decisions made in this bootstrap
+   - CHANGELOG.md     → Keep-a-Changelog format; first entry = "project bootstrapped"
+   - LESSONS.md       → empty template with a short note on how to use it
+   - .env.example     → placeholder keys only, NEVER real values or secrets; if the project needs no environment variables, a single comment line saying so is enough
+   - .gitignore       → appropriate for ${d.tech} (env files, deps, build artifacts, caches)
+   Consistency requirement: README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md must each state the project name, MVP goal and tech stack verbatim — the validation phase checks this.
+4. Agent rule files — single source of truth:
+   - AGENTS.md is the canonical rules file: file reading order, coding rules, update discipline (keep TASKS.md and CHANGELOG.md current, log decisions in DECISIONS.md).
+   - CLAUDE.md and CODEX.md must contain only: a one-line pointer to AGENTS.md plus agent-specific overrides if any. Never duplicate the full rules in three files.
+5. ${d.codeRule}
+6. NEVER overwrite an existing non-empty file. If one exists, skip it and report it.
+7. Keep every file short and specific. Quality over volume.
+
+# REPORT (after creation)
+Respond in ${d.resp}, using this structure:
+${d.struct2}
+
+End your response with exactly:
+${d.end2}`,
+
+  p3: d => `# ROLE
+You are an independent project auditor, PHASE 3 of 3. Assume NOTHING from previous phases is correct — verify everything yourself by reading the actual files in ${d.root}.
+
+# EXPECTED CONTEXT (what the files should reflect)
+- Project name: ${d.name}
+- Project type: ${d.type}
+- Tech stack: ${d.tech}
+- MVP goal: ${d.mvp}
+- Code writing was allowed: ${d.code}
+
+# HARD RULE
+In this phase you must NOT fix, modify, create or delete anything. Audit and report only.
+
+# CHECKLIST
+A. STRUCTURE  — All core files exist: ${CORE_FILES}.
+   All core folders exist: ${CORE_DIRS}.
+B. CONTENT    — No core file is empty or trivial; no unresolved placeholders ({{...}}, TBD, lorem, "TODO"-only sections).
+C. CONSISTENCY — Project name, MVP goal and tech stack are identical across README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md. TASKS.md actually leads to the MVP goal.
+D. AGENT RULES — AGENTS.md is the canonical rules file; CLAUDE.md and CODEX.md point to it and do not contradict it.
+E. SAFETY     — .env.example contains no real secrets (a comment-only file is fine if the project uses no environment variables). .gitignore covers env files, dependencies and build artifacts for ${d.tech}.
+F. SCOPE      — ${d.scopeRule}
+
+# EXCEPTIONS
+- If DECISIONS.md records a user-approved deviation from the core set (items dropped or added in Phase 1), treat that deviation as compliant — do not flag it.
+- LESSONS.md may legitimately contain only a usage note; do not flag it as empty or trivial.
+
+# OUTPUT
+Respond in ${d.resp}, using this structure:
+${d.struct3}
+
+# STOP RULE
+End your response with exactly this question and then stop:
+${d.q3}`
+};
+
+const T_TR = {
+  p1: d => `# ROL
+Sen ${d.agent} içinde çalışan kıdemli bir yazılım mimarı ve proje bootstrap uzmanısın.
+
+# PROJE BAĞLAMI
+- Proje adı: ${d.name}
+- Kök klasör: ${d.root}
+- Açıklama: ${d.desc}
+- Proje tipi: ${d.type}
+- Teknoloji: ${d.tech}
+- MVP hedefi: ${d.mvp}
+- Bootstrap sırasında kod yazma izni: ${d.code}
+- Ek notlar: ${d.notes}
+
+# AŞAMA
+Bu, 3 aşamanın 1.'si (Anlama → Bootstrap → Doğrulama).
+KESİN KURAL: Bu aşamada hiçbir dosya veya klasör oluşturamaz, değiştiremez veya silemezsin.
+
+# GÖREV
+1. ${d.root} varsa ve boş değilse, önce mevcut yapısını kısaca incele ve dikkate al.
+2. Projeye dair anlayışını sentezle: hedef, kapsam, kısıtlar, hedef MVP.
+3. Eksik, belirsiz veya çelişkili her noktayı numaralı soru olarak listele.
+4. Bu proje tipi için en büyük riskleri listele (en fazla 5, her biri tek satır).
+5. 2. aşamada uygulayacağın bootstrap planını öner. Şu çekirdek seti temel al ve YALNIZCA açık gerekçeyle uyarla — asla sessizce ekleme veya çıkarma yapma:
+   - Çekirdek dosyalar: ${CORE_FILES}
+   - Çekirdek klasörler: ${CORE_DIRS}
+   Klasör amaçları: ${DIR_PURPOSES_TR}.
+6. Proje tipi açıkça ek bir dosya gerektiriyorsa (örn. vision için CALIBRATION.md, AI için DATASET.md, lead generation için COMPLIANCE_GUARDRAILS.md), gerekçesiyle birlikte OPSİYONEL olarak öner. Kullanıcı onaylamadan plana dahil etme.
+
+# ÇIKTI FORMATI
+${d.resp} dilinde cevap ver. Tam olarak şu yapıyı ve bölüm başlıklarını kullan:
+${d.struct1}
+
+# DURMA KURALI
+Cevabını tam olarak şu soruyla bitir ve dur:
+${d.q1}
+Kullanıcının açık onayını bekle. Kendi başına devam etme.`,
+
+  p2: d => `# ROL
+Aynı mimar, 3 aşamanın 2.'si. Kullanıcı 1. aşamadaki bootstrap planını ONAYLADI.
+Kullanıcı planda değişiklik istediyse o değişiklikleri uygula; aksi halde onaylanan planı aynen izle.
+
+# PROJE BAĞLAMI
+- Proje adı: ${d.name}
+- Kök klasör: ${d.root}
+- Açıklama: ${d.desc}
+- Proje tipi: ${d.type}
+- Teknoloji: ${d.tech}
+- MVP hedefi: ${d.mvp}
+- Ek notlar: ${d.notes}
+
+# GÖREV
+Onaylanan proje iskeletini ${d.root} içinde oluştur.
+
+## Kurallar
+1. Önce çekirdek klasörleri oluştur: ${CORE_DIRS}. Aksi halde boş kalacak her klasöre bir .gitkeep dosyası koy.
+   Klasör amaçları: ${DIR_PURPOSES_TR}. Bu amaçları README.md'nin depo düzeni bölümünde belgele.
+2. Her çekirdek dosyayı proje bağlamından türetilmiş GERÇEK başlangıç içeriğiyle, ${d.resp} dilinde oluştur. Yasak: boş dosyalar, yalnızca "TODO" içeren dosyalar, çözülmemiş placeholder'lar.
+3. Dosya başına asgari içerik:
+   - README.md        → projenin ne olduğu, MVP hedefi, depo düzeni, doküman bağlantıları
+   - PROJECT_BRIEF.md → hedef, hedef kullanıcı, MVP tanımı, açıkça kapsam dışı maddeler
+   - REQUIREMENTS.md  → bağlamdan türetilen işlevsel + işlevsel olmayan MVP gereksinimleri
+   - DESIGN.md        → başlangıç mimarisi: bileşenler, veri akışı, temel kısıtlar
+   - TASKS.md         → MVP hedefine giden, aşamalı, onay kutulu görev listesi
+   - ROADMAP.md       → MVP → v1 → v2 taslağı
+   - DECISIONS.md     → ADR tarzı kayıt; ilk kayıt = bu bootstrap'ta alınan kararlar
+   - CHANGELOG.md     → Keep-a-Changelog formatı; ilk kayıt = "proje bootstrap edildi"
+   - LESSONS.md       → nasıl kullanılacağına dair kısa notlu boş şablon
+   - .env.example     → yalnızca placeholder anahtarlar, ASLA gerçek değer veya gizli bilgi; proje ortam değişkeni kullanmıyorsa bunu belirten tek yorum satırı yeterli
+   - .gitignore       → ${d.tech} için uygun (env dosyaları, bağımlılıklar, build çıktıları, önbellekler)
+   Tutarlılık şartı: README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md, proje adını, MVP hedefini ve teknolojiyi birebir içermelidir — doğrulama aşaması bunu denetler.
+4. Agent kural dosyaları — tek doğruluk kaynağı:
+   - AGENTS.md kuralların ana dosyasıdır: dosya okuma sırası, kodlama kuralları, güncelleme disiplini (TASKS.md ve CHANGELOG.md güncel tutulur, kararlar DECISIONS.md'ye işlenir).
+   - CLAUDE.md ve CODEX.md yalnızca şunları içermelidir: AGENTS.md'ye tek satırlık bir yönlendirme + varsa agent'a özel istisnalar. Kuralları asla üç dosyada birden kopyalama.
+5. ${d.codeRule}
+6. Var olan dolu bir dosyanın üzerine ASLA yazma. Böyle bir dosya varsa atla ve raporla.
+7. Her dosyayı kısa ve öze yönelik tut. Nicelik değil nitelik.
+
+# RAPOR (oluşturma sonrası)
+${d.resp} dilinde, şu yapıyla cevap ver:
+${d.struct2}
+
+Cevabını tam olarak şu cümleyle bitir:
+${d.end2}`,
+
+  p3: d => `# ROL
+Bağımsız bir proje denetçisisin, 3 aşamanın 3.'sü. Önceki aşamalardan HİÇBİR ŞEYİN doğru olduğunu varsayma — ${d.root} içindeki gerçek dosyaları okuyarak her şeyi kendin doğrula.
+
+# BEKLENEN BAĞLAM (dosyaların yansıtması gerekenler)
+- Proje adı: ${d.name}
+- Proje tipi: ${d.type}
+- Teknoloji: ${d.tech}
+- MVP hedefi: ${d.mvp}
+- Kod yazma izni: ${d.code}
+
+# KESİN KURAL
+Bu aşamada hiçbir şeyi düzeltemez, değiştiremez, oluşturamaz veya silemezsin. Yalnızca denetle ve raporla.
+
+# KONTROL LİSTESİ
+A. YAPI       — Tüm çekirdek dosyalar mevcut: ${CORE_FILES}.
+   Tüm çekirdek klasörler mevcut: ${CORE_DIRS}.
+B. İÇERİK     — Hiçbir çekirdek dosya boş veya geçiştirilmiş değil; çözülmemiş placeholder yok ({{...}}, TBD, lorem, yalnızca "TODO" içeren bölümler).
+C. TUTARLILIK — Proje adı, MVP hedefi ve teknoloji README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md genelinde birebir aynı. TASKS.md gerçekten MVP hedefine götürüyor.
+D. AGENT KURALLARI — AGENTS.md ana kural dosyası; CLAUDE.md ve CODEX.md ona yönlendiriyor ve onunla çelişmiyor.
+E. GÜVENLİK   — .env.example gerçek gizli bilgi içermiyor (proje ortam değişkeni kullanmıyorsa yalnızca yorum satırı içeren dosya kabul edilir). .gitignore, ${d.tech} için env dosyalarını, bağımlılıkları ve build çıktılarını kapsıyor.
+F. KAPSAM     — ${d.scopeRule}
+
+# İSTİSNALAR
+- DECISIONS.md, çekirdek setten kullanıcı onaylı bir sapmayı (1. aşamada çıkarılan veya eklenen öğeler) kaydediyorsa, o sapmayı uyumlu say — işaretleme.
+- LESSONS.md yalnızca kullanım notu içerebilir; boş veya geçiştirilmiş diye işaretleme.
+
+# ÇIKTI
+${d.resp} dilinde, şu yapıyla cevap ver:
+${d.struct3}
+
+# DURMA KURALI
+Cevabını tam olarak şu soruyla bitir ve dur:
+${d.q3}`
+};
+
+function defaults() {
+  return {
+    ui: { lang: "tr", theme: null },
+    f: { name: "", root: "", desc: "", type: "", tech: "", mvp: "", agent: "Claude Code", promptLang: "en", respLang: "tr", notes: "", code: false }
+  };
+}
+
+let state;
+try {
+  const raw = JSON.parse(localStorage.getItem(LS_KEY));
+  state = raw && raw.ui && raw.f ? raw : defaults();
+} catch (e) { state = defaults(); }
+if (state.f.agent === "Agent") state.f.agent = "a coding agent";
+
+function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
+
+const TIP_KEYS = ["name", "root", "desc", "type", "tech", "mvp", "agent", "promptLang", "respLang", "notes", "code"];
+const REQUIRED_IDS = ["f-name", "f-root", "f-desc", "f-type", "f-tech", "f-mvp"];
+
+function updateReqStyles() {
+  REQUIRED_IDS.forEach(id => {
+    const el = $(id);
+    const filled = (el.value || "").trim() !== "";
+    el.classList.toggle("req-empty", !filled);
+    el.classList.toggle("req-filled", filled);
+  });
+}
+
+const FIELD_MAP = [
+  ["f-name", "name"], ["f-root", "root"], ["f-desc", "desc"], ["f-tech", "tech"],
+  ["f-mvp", "mvp"], ["f-notes", "notes"]
+];
+const SELECT_MAP = [["f-type", "type"], ["f-agent", "agent"], ["f-promptlang", "promptLang"], ["f-resplang", "respLang"]];
+
+function buildSelects() {
+  const L = I18N[state.ui.lang];
+  const type = $("f-type");
+  type.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = ""; opt0.textContent = L.typePlaceholder;
+  type.appendChild(opt0);
+  TYPE_KEYS.forEach(k => {
+    const o = document.createElement("option");
+    o.value = k; o.textContent = L.typeNames[k];
+    type.appendChild(o);
+  });
+  type.value = state.f.type;
+
+  const ag = $("f-agent");
+  ag.innerHTML = "";
+  AGENTS.concat([L.agentOther]).forEach(a => {
+    const o = document.createElement("option");
+    o.value = a === L.agentOther ? "a coding agent" : a;
+    o.textContent = a;
+    ag.appendChild(o);
+  });
+  ag.value = state.f.agent;
+
+  const pl = $("f-promptlang");
+  pl.innerHTML = "";
+  ["en", "tr"].forEach(k => {
+    const o = document.createElement("option");
+    o.value = k; o.textContent = L.promptLangs[k];
+    pl.appendChild(o);
+  });
+  pl.value = state.f.promptLang;
+
+  const rl = $("f-resplang");
+  rl.innerHTML = "";
+  ["tr", "en"].forEach(k => {
+    const o = document.createElement("option");
+    o.value = k; o.textContent = L.respLangs[k];
+    rl.appendChild(o);
+  });
+  rl.value = state.f.respLang;
+}
+
+function applyLabels() {
+  const L = I18N[state.ui.lang];
+  document.documentElement.lang = state.ui.lang;
+  $("t-subtitle").textContent = L.subtitle;
+  $("t-formTitle").textContent = L.formTitle;
+  ["name", "root", "desc", "type", "tech", "mvp", "agent", "promptLang", "respLang", "notes", "code"].forEach(k => {
+    $("l-" + k).textContent = L[k];
+  });
+  $("t-autosave").textContent = L.autosave;
+  $("clear-btn").textContent = L.clear;
+  $("t-outTitle").textContent = L.outTitle;
+  $("t-outHint").textContent = L.outHint;
+  $("t-footer").textContent = L.footer;
+  $("b-0").textContent = L.p1; $("b-1").textContent = L.p2; $("b-2").textContent = L.p3;
+  $("g-0").textContent = L.g1; $("g-1").textContent = L.g2; $("g-2").textContent = L.g3;
+  document.querySelectorAll(".copy-btn").forEach(b => { if (!b.classList.contains("ok")) b.textContent = L.copy; });
+  $("f-name").placeholder = L.phName;
+  $("f-root").placeholder = L.phRoot;
+  $("f-desc").placeholder = L.phDesc;
+  $("f-notes").placeholder = L.phNotes;
+  TIP_KEYS.forEach(k => {
+    const el = $("tip-" + k);
+    const tp = L.tips[k];
+    el.textContent = tp.t;
+    const ex = document.createElement("span");
+    ex.className = "tip-ex";
+    ex.textContent = tp.e;
+    el.appendChild(ex);
+  });
+  document.querySelectorAll(".info").forEach(el => el.setAttribute("aria-label", L.infoLabel));
+  applyHints();
+  document.querySelectorAll("#lang-seg button").forEach(b => b.classList.toggle("on", b.dataset.lang === state.ui.lang));
+}
+
+function applyHints() {
+  const lang = state.ui.lang;
+  const h = TYPE_HINTS[state.f.type];
+  $("f-tech").placeholder = h ? h[lang].tech : "";
+  $("f-mvp").placeholder = h ? h[lang].mvp : "";
+}
+
+let prompts = ["", "", ""];
+
+function renderPrompts() {
+  const L = I18N[state.ui.lang];
+  const f = state.f;
+  const PL = f.promptLang;
+  const TP = I18N[PL];
+  const fb = PL === "en" ? "(not specified)" : "(belirtilmedi)";
+  const v = (x, alt) => { x = (x || "").trim(); return x || alt; };
+
+  const codeRule = PL === "en"
+    ? (f.code
+        ? "Code writing IS allowed: create only a minimal entry point in src/, nothing more."
+        : "Code writing is NOT allowed: write NO application code; src/ contains only .gitkeep.")
+    : (f.code
+        ? "Kod yazma İZNİ VAR: src/ içinde yalnızca minimal bir giriş noktası oluştur, fazlasını yazma."
+        : "Kod yazma izni YOK: hiçbir uygulama kodu yazma; src/ yalnızca .gitkeep içersin.");
+  const scopeRule = PL === "en"
+    ? (f.code
+        ? "Code writing was allowed: verify src/ contains only a minimal entry point, nothing more."
+        : "Code writing was NOT allowed: verify no application code exists in src/.")
+    : (f.code
+        ? "Kod yazma izni VARDI: src/ içinde yalnızca minimal bir giriş noktası olduğunu doğrula."
+        : "Kod yazma izni YOKTU: src/ içinde hiçbir uygulama kodu bulunmadığını doğrula.");
+
+  const d = {
+    name: v(f.name, fb), root: v(f.root, fb), desc: v(f.desc, fb),
+    type: f.type ? TP.typeNames[f.type] : fb,
+    tech: v(f.tech, fb), mvp: v(f.mvp, fb),
+    agent: f.agent || "Claude Code",
+    notes: v(f.notes, PL === "en" ? "None" : "Yok"),
+    code: PL === "en" ? (f.code ? "yes" : "no") : (f.code ? "evet" : "hayır"),
+    codeRule, scopeRule,
+    resp: PL === "en" ? (f.respLang === "tr" ? "Turkish" : "English") : (f.respLang === "tr" ? "Türkçe" : "İngilizce")
+  };
+  const rs = RESP_STRINGS[f.respLang] || RESP_STRINGS.en;
+  d.struct1 = rs.p1struct; d.q1 = rs.p1q;
+  d.struct2 = rs.p2struct; d.end2 = rs.p2end;
+  d.struct3 = rs.p3struct; d.q3 = rs.p3q;
+
+  const T = PL === "en" ? T_EN : T_TR;
+  prompts = [T.p1(d), T.p2(d), T.p3(d)];
+  const loc = state.ui.lang === "tr" ? "tr-TR" : "en-US";
+  prompts.forEach((p, i) => {
+    $("p-" + i).textContent = p;
+    $("c-" + i).textContent = p.length.toLocaleString(loc) + " " + L.chars;
+  });
+
+  const required = [["name", L.name], ["root", L.root], ["desc", L.desc], ["type", L.type], ["tech", L.tech], ["mvp", L.mvp]];
+  const missing = required.filter(([k]) => !(f[k] || "").trim()).map(([, lbl]) => lbl);
+  const warn = $("warn");
+  if (missing.length) {
+    warn.textContent = L.missing + " " + missing.join(", ");
+    warn.classList.add("show");
+  } else {
+    warn.classList.remove("show");
+  }
+  updateReqStyles();
+}
+
+function applyTheme() {
+  let t = state.ui.theme;
+  if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  $("ic-moon").style.display = t === "light" ? "" : "none";
+  $("ic-sun").style.display = t === "dark" ? "" : "none";
+}
+
+FIELD_MAP.forEach(([id, key]) => {
+  const el = $(id);
+  el.value = state.f[key];
+  el.addEventListener("input", () => { state.f[key] = el.value; save(); renderPrompts(); });
+});
+SELECT_MAP.forEach(([id, key]) => {
+  $(id).addEventListener("change", e => {
+    state.f[key] = e.target.value;
+    save();
+    if (key === "type") applyHints();
+    renderPrompts();
+  });
+});
+$("f-code").checked = state.f.code;
+$("f-code").addEventListener("change", e => { state.f.code = e.target.checked; save(); renderPrompts(); });
+
+document.querySelectorAll("#lang-seg button").forEach(b => {
+  b.addEventListener("click", () => {
+    state.ui.lang = b.dataset.lang;
+    save();
+    buildSelects();
+    applyLabels();
+    renderPrompts();
+  });
+});
+
+$("theme-btn").addEventListener("click", () => {
+  const cur = document.documentElement.dataset.theme;
+  state.ui.theme = cur === "dark" ? "light" : "dark";
+  save();
+  applyTheme();
+});
+
+$("clear-btn").addEventListener("click", () => {
+  if (!confirm(I18N[state.ui.lang].confirmClear)) return;
+  state.f = defaults().f;
+  save();
+  FIELD_MAP.forEach(([id, key]) => { $(id).value = state.f[key]; });
+  $("f-code").checked = false;
+  buildSelects();
+  applyHints();
+  renderPrompts();
+});
+
+async function copyText(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "absolute";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+  }
+  const L = I18N[state.ui.lang];
+  btn.classList.add("ok");
+  btn.textContent = L.copied;
+  setTimeout(() => { btn.classList.remove("ok"); btn.textContent = I18N[state.ui.lang].copy; }, 1500);
+}
+
+document.querySelectorAll(".copy-btn").forEach(b => {
+  b.addEventListener("click", () => copyText(prompts[Number(b.dataset.i)], b));
+});
+
+document.querySelectorAll(".info").forEach(el => {
+  el.addEventListener("click", e => {
+    e.stopPropagation();
+    document.querySelectorAll(".info.open").forEach(o => { if (o !== el) o.classList.remove("open"); });
+    el.classList.toggle("open");
+  });
+});
+document.addEventListener("click", () => {
+  document.querySelectorAll(".info.open").forEach(o => o.classList.remove("open"));
+});
+
+applyTheme();
+buildSelects();
+applyLabels();
+renderPrompts();
+</script>
+</body>
+</html>
