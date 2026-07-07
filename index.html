@@ -70,6 +70,7 @@ input[type=text].req-filled:focus,textarea.req-filled:focus,select.req-filled:fo
 .out-head span{font-size:12.5px;color:var(--text-3)}
 .warn{display:none;background:var(--warn-bg);color:var(--warn-text);font-size:12.5px;padding:8px 12px;border-radius:8px;margin:8px 0 4px}
 .warn.show{display:block}
+.out-sub{font-size:12.5px;color:var(--text-3);margin:18px 0 2px;padding-top:14px;border-top:1px dashed var(--border)}
 .pcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:12px}
 .pc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .pc-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
@@ -146,6 +147,12 @@ footer{margin-top:28px;font-size:12px;color:var(--text-3);text-align:center;line
     <p class="guide" id="g-2"></p>
     <pre id="p-2"></pre>
   </div>
+  <div class="out-sub" id="t-resumeHead">Sonraki oturumlar için</div>
+  <div class="pcard" id="pc-3">
+    <div class="pc-top"><div class="pc-meta"><span class="badge" id="b-3">4. Devam / Güncelle</span><span class="pc-count" id="c-3"></span></div><button type="button" class="copy-btn" data-i="3">Kopyala</button></div>
+    <p class="guide" id="g-3"></p>
+    <pre id="p-3"></pre>
+  </div>
 </section>
 </main>
 
@@ -169,11 +176,13 @@ const I18N = {
     outTitle: "Üretilen promptlar", outHint: "sırayla agent'a verin",
     missing: "Eksik alanlar:",
     copy: "Kopyala", copied: "Kopyalandı ✓", chars: "karakter",
-    p1: "1. Anlama ve plan", p2: "2. Bootstrap", p3: "3. Doğrulama",
+    p1: "1. Anlama ve plan", p2: "2. Bootstrap", p3: "3. Doğrulama", p4: "4. Devam / Güncelle",
     g1: "İlk bu promptu verin. Agent plan sunar ve onayınızı bekler; dosya oluşturmaz.",
     g2: "Planı onayladıktan sonra verin. Agent klasör ve dosyaları oluşturur, rapor verir.",
     g3: "Bootstrap bitince, tercihen yeni bir agent oturumunda verin. Agent denetler ve düzeltme için onay bekler.",
-    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.3",
+    g4: "Projeye sonraki oturumlarda dönerken verin. Agent durumu çıkarır, TASKS ve CHANGELOG güncellemesi önerir, sıradaki adımları söyler; onaysız değişiklik yapmaz.",
+    resumeHead: "Sonraki oturumlar için",
+    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.4",
     phName: "Örn. VisionVp", phRoot: "C:\\Projeler\\proje-adi", phDesc: "Projenin tek paragraflık özeti", phNotes: "Riskler, özel kurallar, mevcut durum…",
     typePlaceholder: "Seçin…",
     typeNames: { vision: "Vision / görüntü işleme", ai: "AI / makine öğrenmesi", web: "Web uygulaması", scraping: "Scraping / veri toplama", lead: "Lead generation", agent: "Agent sistemi", automation: "Yazılım otomasyonu", other: "Diğer" },
@@ -206,11 +215,13 @@ const I18N = {
     outTitle: "Generated prompts", outHint: "give to the agent in order",
     missing: "Missing fields:",
     copy: "Copy", copied: "Copied ✓", chars: "characters",
-    p1: "1. Understand & plan", p2: "2. Bootstrap", p3: "3. Validation",
+    p1: "1. Understand & plan", p2: "2. Bootstrap", p3: "3. Validation", p4: "4. Resume & update",
     g1: "Give this prompt first. The agent presents a plan and waits for your approval; it creates nothing.",
     g2: "Give after approving the plan. The agent creates folders and files, then reports.",
     g3: "Run after bootstrap, preferably in a fresh agent session. The agent audits and waits for approval to fix.",
-    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.3",
+    g4: "Give this when returning to the project in later sessions. The agent maps the state, proposes TASKS and CHANGELOG updates and suggests next steps; it changes nothing without approval.",
+    resumeHead: "For later sessions",
+    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.4",
     phName: "e.g. VisionVp", phRoot: "C:\\Projects\\my-project", phDesc: "One-paragraph summary of the project", phNotes: "Risks, special rules, current state…",
     typePlaceholder: "Select…",
     typeNames: { vision: "Vision / image processing", ai: "AI / machine learning", web: "Web application", scraping: "Scraping / data collection", lead: "Lead generation", agent: "Agent system", automation: "Software automation", other: "Other" },
@@ -290,7 +301,12 @@ const RESP_STRINGS = {
     p3struct: `1. Audit table — columns: Check | Status (PASS/WARN/FAIL) | Evidence (file + finding) | Suggested fix
 2. Overall verdict: READY or NEEDS FIXES
 3. If NEEDS FIXES: numbered fix list ordered by severity (FAIL items first)`,
-    p3q: `"Shall I apply the fixes listed above? I will not modify anything until you confirm."`
+    p3q: `"Shall I apply the fixes listed above? I will not modify anything until you confirm."`,
+    p4struct: `1. Project status summary (max 8 lines)
+2. Reconciliation findings — table: Finding | File | Suggested update
+3. Proposed file updates (exact new content)
+4. Next steps (1-3, ordered, with reason)`,
+    p4q: `"Shall I apply the proposed updates to the tracking files? I will not modify anything until you confirm."`
   },
   tr: {
     p1struct: `1. Anlayış (en fazla 10 satır)
@@ -307,7 +323,12 @@ const RESP_STRINGS = {
     p3struct: `1. Denetim tablosu — sütunlar: Kontrol | Durum (PASS/WARN/FAIL) | Kanıt (dosya + bulgu) | Önerilen düzeltme
 2. Genel hüküm: READY veya NEEDS FIXES
 3. NEEDS FIXES ise: önem sırasına göre numaralı düzeltme listesi (önce FAIL maddeleri)`,
-    p3q: `"Yukarıda listelenen düzeltmeleri uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`
+    p3q: `"Yukarıda listelenen düzeltmeleri uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`,
+    p4struct: `1. Proje durum özeti (en fazla 8 satır)
+2. Mutabakat bulguları — tablo: Bulgu | Dosya | Önerilen güncelleme
+3. Önerilen dosya güncellemeleri (yeni içerik birebir)
+4. Sıradaki adımlar (1-3, sıralı, gerekçeli)`,
+    p4q: `"Önerilen güncellemeleri izleme dosyalarına uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`
   }
 };
 
@@ -428,7 +449,43 @@ ${d.struct3}
 
 # STOP RULE
 End your response with exactly this question and then stop:
-${d.q3}`
+${d.q3}`,
+
+  p4: d => `# ROLE
+You are the ongoing project assistant for ${d.name}, running inside ${d.agent}. The project was bootstrapped earlier; your job is to re-establish context, reconcile the tracking files with reality, and propose the next steps.
+
+# PROJECT CONTEXT
+- Project name: ${d.name}
+- Root folder: ${d.root}
+- Description: ${d.desc}
+- Project type: ${d.type}
+- Tech stack: ${d.tech}
+- MVP goal: ${d.mvp}
+- Extra notes: ${d.notes}
+
+# HARD RULE
+Analyze first — do NOT modify anything until the user approves your proposal at the end.
+
+# TASK
+Work inside ${d.root}.
+1. Read the tracking files in this order (skip any that do not exist): README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md.
+2. Inspect the actual state of the project: contents of src/, tests/ and the other folders, and the git history if a repository exists.
+3. Reconcile TASKS.md against reality:
+   - tasks that are done but not checked off,
+   - tasks checked off that do not match reality,
+   - work present in the project that no task covers,
+   - tasks that have become obsolete.
+4. Check whether CHANGELOG.md reflects the work you found; note missing entries.
+5. Prepare an update proposal with the exact edits for TASKS.md and CHANGELOG.md (plus DECISIONS.md or LESSONS.md only if something clearly belongs there). Do not propose changes to any other file.
+6. Propose the 1-3 most logical next steps toward the MVP goal — or, if the MVP is done, toward the next roadmap item.
+
+# OUTPUT
+Respond in ${d.resp}, using this structure:
+${d.struct4}
+
+# STOP RULE
+End your response with exactly this question and then stop:
+${d.q4}`
 };
 
 const T_TR = {
@@ -548,7 +605,43 @@ ${d.struct3}
 
 # DURMA KURALI
 Cevabını tam olarak şu soruyla bitir ve dur:
-${d.q3}`
+${d.q3}`,
+
+  p4: d => `# ROL
+Sen ${d.name} projesinin süregelen proje asistanısın ve ${d.agent} içinde çalışıyorsun. Proje daha önce bootstrap edildi; görevin bağlamı yeniden kurmak, izleme dosyalarını gerçek durumla mutabık kılmak ve sıradaki adımları önermek.
+
+# PROJE BAĞLAMI
+- Proje adı: ${d.name}
+- Kök klasör: ${d.root}
+- Açıklama: ${d.desc}
+- Proje tipi: ${d.type}
+- Teknoloji: ${d.tech}
+- MVP hedefi: ${d.mvp}
+- Ek notlar: ${d.notes}
+
+# KESİN KURAL
+Önce analiz et — sondaki önerini kullanıcı onaylamadan hiçbir şeyi değiştirme.
+
+# GÖREV
+${d.root} içinde çalış.
+1. İzleme dosyalarını şu sırayla oku (olmayanları atla): README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md.
+2. Projenin gerçek durumunu incele: src/, tests/ ve diğer klasörlerin içeriği; depo varsa git geçmişi.
+3. TASKS.md'yi gerçeklikle mutabık kıl:
+   - yapılmış ama işaretlenmemiş görevler,
+   - işaretli ama gerçekle örtüşmeyen görevler,
+   - projede var olan ama hiçbir göreve bağlı olmayan işler,
+   - artık geçersiz görevler.
+4. CHANGELOG.md bulduğun işleri yansıtıyor mu kontrol et; eksik kayıtları not et.
+5. TASKS.md ve CHANGELOG.md için birebir düzenlemeler içeren bir güncelleme önerisi hazırla (yalnızca açıkça gerekiyorsa DECISIONS.md veya LESSONS.md da eklenebilir). Başka hiçbir dosyada değişiklik önerme.
+6. MVP hedefine — MVP bittiyse yol haritasındaki sonraki maddeye — giden en mantıklı 1-3 adımı öner.
+
+# ÇIKTI
+${d.resp} dilinde, şu yapıyla cevap ver:
+${d.struct4}
+
+# DURMA KURALI
+Cevabını tam olarak şu soruyla bitir ve dur:
+${d.q4}`
 };
 
 function defaults() {
@@ -641,8 +734,9 @@ function applyLabels() {
   $("t-outTitle").textContent = L.outTitle;
   $("t-outHint").textContent = L.outHint;
   $("t-footer").textContent = L.footer;
-  $("b-0").textContent = L.p1; $("b-1").textContent = L.p2; $("b-2").textContent = L.p3;
-  $("g-0").textContent = L.g1; $("g-1").textContent = L.g2; $("g-2").textContent = L.g3;
+  $("b-0").textContent = L.p1; $("b-1").textContent = L.p2; $("b-2").textContent = L.p3; $("b-3").textContent = L.p4;
+  $("g-0").textContent = L.g1; $("g-1").textContent = L.g2; $("g-2").textContent = L.g3; $("g-3").textContent = L.g4;
+  $("t-resumeHead").textContent = L.resumeHead;
   document.querySelectorAll(".copy-btn").forEach(b => { if (!b.classList.contains("ok")) b.textContent = L.copy; });
   $("f-name").placeholder = L.phName;
   $("f-root").placeholder = L.phRoot;
@@ -669,7 +763,7 @@ function applyHints() {
   $("f-mvp").placeholder = h ? h[lang].mvp : "";
 }
 
-let prompts = ["", "", ""];
+let prompts = ["", "", "", ""];
 
 function renderPrompts() {
   const L = I18N[state.ui.lang];
@@ -708,9 +802,10 @@ function renderPrompts() {
   d.struct1 = rs.p1struct; d.q1 = rs.p1q;
   d.struct2 = rs.p2struct; d.end2 = rs.p2end;
   d.struct3 = rs.p3struct; d.q3 = rs.p3q;
+  d.struct4 = rs.p4struct; d.q4 = rs.p4q;
 
   const T = PL === "en" ? T_EN : T_TR;
-  prompts = [T.p1(d), T.p2(d), T.p3(d)];
+  prompts = [T.p1(d), T.p2(d), T.p3(d), T.p4(d)];
   const loc = state.ui.lang === "tr" ? "tr-TR" : "en-US";
   prompts.forEach((p, i) => {
     $("p-" + i).textContent = p;

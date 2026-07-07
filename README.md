@@ -16,6 +16,12 @@ Yerel, tek dosyalık HTML aracı. Proje bilgilerini formdan alır ve Claude Code
 | 2 | Bootstrap | Agent klasör ve kök `.md` dosyalarını oluşturur | Üretim raporu verir |
 | 3 | Doğrulama | Agent üretilenleri denetler (tercihen **yeni oturumda** verin) | PASS/WARN/FAIL raporu; düzeltme için onay ister |
 
+Projeye sonraki oturumlarda dönerken 4. promptu kullanın:
+
+| Sıra | Prompt | Ne yapar | Ne beklemeli |
+|------|--------|----------|--------------|
+| 4 | Devam / Güncelle | Agent izleme dosyalarını gerçek durumla karşılaştırır | Durum özeti + TASKS/CHANGELOG güncelleme önerisi + sıradaki adımlar; onaysız değişiklik yapmaz |
+
 ## Özellikler
 
 - Sade-modern arayüz, karanlık/aydınlık tema
@@ -34,6 +40,9 @@ Kural dosyalarında tek doğruluk kaynağı `AGENTS.md`'dir; `CLAUDE.md` ve `COD
 
 ## Sürüm
 
-v0.2 — Kendi kendine test (dogfooding) sonrası şablon düzeltmeleri: kapanış cümleleri ve bölüm başlıkları cevap diline göre üretilir, Bootstrap–Validation tutarlılık şartı, denetim istisnaları (onaylı sapmalar, LESSONS.md), esnek `.env.example` kuralı, klasör amaç tanımları, içerik dili kuralı.
+- v0.4 — **4. prompt: Devam / Güncelle.** Projeye sonraki oturumlarda dönerken kullanılır: agent izleme dosyalarını okur, TASKS.md'yi depodaki gerçek durumla mutabık kılar, CHANGELOG eksiklerini bulur, güncelleme önerisi sunar ve sıradaki 1-3 adımı söyler; onaysız değişiklik yapmaz.
+- v0.3 — Zorunlu alanlarda ince kırmızı/yeşil çerçeve; tüm alanlarda "i" bilgi balonları (açıklama + örnek; hover, tık ve klavye ile açılır; TR/EN).
+- v0.2 — Dogfooding sonrası şablon düzeltmeleri: kapanış cümleleri ve bölüm başlıkları cevap diline göre üretilir, Bootstrap–Validation tutarlılık şartı, denetim istisnaları (onaylı sapmalar, LESSONS.md), esnek `.env.example` kuralı, klasör amaç tanımları, içerik dili kuralı.
+- v0.1 — İlk MVP.
 
-Planlanan v2: proje tipine özel ek dosya paketleri (ör. vision → `CALIBRATION.md`), "Devam/Güncelleme" promptu, JSON dışa/içe aktarma, çoklu proje profilleri.
+Planlanan v2: proje tipine özel ek dosya paketleri (ör. vision → `CALIBRATION.md`), JSON dışa/içe aktarma, çoklu proje profilleri, şablon düzenleme modu.
