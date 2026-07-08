@@ -40,6 +40,7 @@ Kural dosyalarında tek doğruluk kaynağı `AGENTS.md`'dir; `CLAUDE.md` ve `COD
 
 ## Sürüm
 
+- v0.5 — **AGENTS.md kalite paketi.** Opsiyonel "Komutlar" alanı: agent build/test/run komutlarını AGENTS.md'ye yazar (araştırmaya göre agent'a en çok yarayan içerik). AGENTS.md artık açık standardın başlıklarıyla üretilir ve "ince tut, kopyalama yerine referans ver" kuralına uyar. Bootstrap'a `git init` 0. adımı eklendi. Projeye `STATUS.md` (gidişat takip dosyası) eklendi.
 - v0.4 — **4. prompt: Devam / Güncelle.** Projeye sonraki oturumlarda dönerken kullanılır: agent izleme dosyalarını okur, TASKS.md'yi depodaki gerçek durumla mutabık kılar, CHANGELOG eksiklerini bulur, güncelleme önerisi sunar ve sıradaki 1-3 adımı söyler; onaysız değişiklik yapmaz.
 - v0.3 — Zorunlu alanlarda ince kırmızı/yeşil çerçeve; tüm alanlarda "i" bilgi balonları (açıklama + örnek; hover, tık ve klavye ile açılır; TR/EN).
 - v0.2 — Dogfooding sonrası şablon düzeltmeleri: kapanış cümleleri ve bölüm başlıkları cevap diline göre üretilir, Bootstrap–Validation tutarlılık şartı, denetim istisnaları (onaylı sapmalar, LESSONS.md), esnek `.env.example` kuralı, klasör amaç tanımları, içerik dili kuralı.
