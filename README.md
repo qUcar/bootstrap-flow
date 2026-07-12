@@ -40,6 +40,7 @@ Kural dosyalarında tek doğruluk kaynağı `AGENTS.md`'dir; `CLAUDE.md` ve `COD
 
 ## Sürüm
 
+- v0.6 — **Proje ölçeği seçici (Hızlı / Standart / Tam).** Çekirdek dosya/klasör seti proje büyüklüğüne göre ayarlanır: Hızlı = 7 dosya + 3 klasör (küçük betik), Standart = 12 + 5, Tam = 14 + 8 (varsayılan, kapsamlı proje). Her kademe alttakini kapsar. Araştırmanın "küçük iş için 14 dosya fazla" bulgusunu çözer; tutarlılık ve doğrulama kuralları ölçeğe göre uyarlanır.
 - v0.5 — **AGENTS.md kalite paketi.** Opsiyonel "Komutlar" alanı: agent build/test/run komutlarını AGENTS.md'ye yazar (araştırmaya göre agent'a en çok yarayan içerik). AGENTS.md artık açık standardın başlıklarıyla üretilir ve "ince tut, kopyalama yerine referans ver" kuralına uyar. Bootstrap'a `git init` 0. adımı eklendi. Projeye `STATUS.md` (gidişat takip dosyası) eklendi.
 - v0.4 — **4. prompt: Devam / Güncelle.** Projeye sonraki oturumlarda dönerken kullanılır: agent izleme dosyalarını okur, TASKS.md'yi depodaki gerçek durumla mutabık kılar, CHANGELOG eksiklerini bulur, güncelleme önerisi sunar ve sıradaki 1-3 adımı söyler; onaysız değişiklik yapmaz.
 - v0.3 — Zorunlu alanlarda ince kırmızı/yeşil çerçeve; tüm alanlarda "i" bilgi balonları (açıklama + örnek; hover, tık ve klavye ile açılır; TR/EN).

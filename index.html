@@ -115,6 +115,7 @@ footer{margin-top:28px;font-size:12px;color:var(--text-3);text-align:center;line
   </div>
   <div class="field"><div class="lbl"><label id="l-mvp" for="f-mvp">MVP hedefi</label><span class="info" tabindex="0">i<span class="tip" id="tip-mvp"></span></span></div><textarea id="f-mvp"></textarea></div>
   <div class="field"><div class="lbl"><label id="l-commands" for="f-commands">Komutlar (opsiyonel)</label><span class="info" tabindex="0">i<span class="tip" id="tip-commands"></span></span></div><textarea id="f-commands" style="min-height:38px"></textarea></div>
+  <div class="field"><div class="lbl"><label id="l-scale" for="f-scale">Proje ölçeği</label><span class="info" tabindex="0">i<span class="tip" id="tip-scale"></span></span></div><select id="f-scale"></select></div>
   <div class="grid2">
     <div class="field"><div class="lbl"><label id="l-agent" for="f-agent">Agent tipi</label><span class="info" tabindex="0">i<span class="tip" id="tip-agent"></span></span></div><select id="f-agent"></select></div>
     <div class="field"><div class="lbl"><label id="l-promptLang" for="f-promptlang">Prompt dili</label><span class="info" tabindex="0">i<span class="tip" id="tip-promptLang"></span></span></div><select id="f-promptlang"></select></div>
@@ -171,7 +172,7 @@ const I18N = {
     formTitle: "Proje bilgileri",
     name: "Proje adı", root: "Kök klasör yolu", desc: "Kısa açıklama", type: "Proje tipi",
     tech: "Teknoloji", mvp: "MVP hedefi", agent: "Agent tipi", promptLang: "Prompt dili",
-    respLang: "Cevap dili", notes: "Ek notlar (opsiyonel)", commands: "Komutlar (opsiyonel)", code: "Bootstrap sırasında kod yazılsın",
+    respLang: "Cevap dili", notes: "Ek notlar (opsiyonel)", commands: "Komutlar (opsiyonel)", scale: "Proje ölçeği", code: "Bootstrap sırasında kod yazılsın",
     autosave: "Form otomatik kaydedilir", clear: "Formu temizle",
     confirmClear: "Tüm form alanları temizlensin mi?",
     outTitle: "Üretilen promptlar", outHint: "sırayla agent'a verin",
@@ -183,13 +184,14 @@ const I18N = {
     g3: "Bootstrap bitince, tercihen yeni bir agent oturumunda verin. Agent denetler ve düzeltme için onay bekler.",
     g4: "Projeye sonraki oturumlarda dönerken verin. Agent durumu çıkarır, TASKS ve CHANGELOG güncellemesi önerir, sıradaki adımları söyler; onaysız değişiklik yapmaz.",
     resumeHead: "Sonraki oturumlar için",
-    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.5",
+    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.6",
     phName: "Örn. VisionVp", phRoot: "C:\\Projeler\\proje-adi", phDesc: "Projenin tek paragraflık özeti", phNotes: "Riskler, özel kurallar, mevcut durum…", phCommands: "Örn: python -m pytest · python src/main.py",
     typePlaceholder: "Seçin…",
     typeNames: { vision: "Vision / görüntü işleme", ai: "AI / makine öğrenmesi", web: "Web uygulaması", scraping: "Scraping / veri toplama", lead: "Lead generation", agent: "Agent sistemi", automation: "Yazılım otomasyonu", other: "Diğer" },
     promptLangs: { en: "English (önerilen)", tr: "Türkçe" },
     respLangs: { tr: "Türkçe", en: "English" },
     agentOther: "Diğer agent",
+    scaleNames: { quick: "Hızlı — küçük araç/betik", standard: "Standart — dengeli", full: "Tam — kapsamlı proje" },
     infoLabel: "Bilgi",
     tips: {
       name: { t: "Projenin kısa adı. Üretilen promptlarda ve tüm kök dosyalarda kullanılır.", e: "Örn: HizliNot" },
@@ -203,6 +205,7 @@ const I18N = {
       respLang: { t: "Agent'ın cevaplarının ve oluşturacağı dosya içeriklerinin dili.", e: "Örn: Türkçe" },
       notes: { t: "Riskler, özel kurallar veya mevcut durum gibi ek bilgiler. Boş bırakılabilir.", e: "Örn: Üçüncü parti kütüphane kullanılmayacak" },
       commands: { t: "Projeyi çalıştırma, test ve derleme komutları. AGENTS.md'ye yazılır — araştırmalara göre agent'a en çok yarayan bilgi budur. Boş bırakırsan agent teknolojiden çıkarmaya çalışır.", e: "Örn: pytest · python src/main.py" },
+      scale: { t: "Kaç çekirdek dosya/klasör üretilecek. Hızlı=7 dosya (küçük betik), Standart=12, Tam=14 (kapsamlı proje). Her kademe alttakini kapsar.", e: "Örn: Küçük bir araç için Hızlı" },
       code: { t: "İşaretlenirse agent bootstrap sırasında src/ içine minimal bir başlangıç kodu da yazar; işaretlenmezse yalnızca dosya iskeleti kurulur.", e: "Örn: Kapalı bırakın — önce plan, kod sonra" }
     }
   },
@@ -211,7 +214,7 @@ const I18N = {
     formTitle: "Project details",
     name: "Project name", root: "Root folder path", desc: "Short description", type: "Project type",
     tech: "Tech stack", mvp: "MVP goal", agent: "Agent type", promptLang: "Prompt language",
-    respLang: "Response language", notes: "Extra notes (optional)", commands: "Commands (optional)", code: "Allow code writing during bootstrap",
+    respLang: "Response language", notes: "Extra notes (optional)", commands: "Commands (optional)", scale: "Project scale", code: "Allow code writing during bootstrap",
     autosave: "Form is saved automatically", clear: "Clear form",
     confirmClear: "Clear all form fields?",
     outTitle: "Generated prompts", outHint: "give to the agent in order",
@@ -223,13 +226,14 @@ const I18N = {
     g3: "Run after bootstrap, preferably in a fresh agent session. The agent audits and waits for approval to fix.",
     g4: "Give this when returning to the project in later sessions. The agent maps the state, proposes TASKS and CHANGELOG updates and suggests next steps; it changes nothing without approval.",
     resumeHead: "For later sessions",
-    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.5",
+    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.6",
     phName: "e.g. VisionVp", phRoot: "C:\\Projects\\my-project", phDesc: "One-paragraph summary of the project", phNotes: "Risks, special rules, current state…", phCommands: "e.g. python -m pytest · python src/main.py",
     typePlaceholder: "Select…",
     typeNames: { vision: "Vision / image processing", ai: "AI / machine learning", web: "Web application", scraping: "Scraping / data collection", lead: "Lead generation", agent: "Agent system", automation: "Software automation", other: "Other" },
     promptLangs: { en: "English (recommended)", tr: "Turkish" },
     respLangs: { tr: "Turkish", en: "English" },
     agentOther: "Other agent",
+    scaleNames: { quick: "Quick — small tool/script", standard: "Standard — balanced", full: "Full — comprehensive project" },
     infoLabel: "Info",
     tips: {
       name: { t: "Short name of the project. Used in the generated prompts and all root files.", e: "e.g. QuickNote" },
@@ -243,6 +247,7 @@ const I18N = {
       respLang: { t: "Language of the agent's replies and of the file contents it creates.", e: "e.g. Turkish" },
       notes: { t: "Extra information such as risks, special rules or current state. Can be left empty.", e: "e.g. No third-party libraries" },
       commands: { t: "Commands to run, test and build the project. Written into AGENTS.md — research shows this is the highest-value info for the agent. Leave empty and the agent will try to infer them from the tech stack.", e: "e.g. pytest · python src/main.py" },
+      scale: { t: "How many core files/folders get generated. Quick=7 files (small script), Standard=12, Full=14 (comprehensive project). Each tier includes the ones below it.", e: "e.g. Quick for a small tool" },
       code: { t: "If checked, the agent also writes a minimal starting point into src/ during bootstrap; if unchecked, only the file skeleton is created.", e: "e.g. Leave off — plan first, code later" }
     }
   }
@@ -283,10 +288,30 @@ const TYPE_HINTS = {
   other: { tr: { tech: "", mvp: "" }, en: { tech: "", mvp: "" } }
 };
 
-const CORE_FILES = "README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, CLAUDE.md, AGENTS.md, CODEX.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, .env.example, .gitignore";
-const CORE_DIRS = "docs/, src/, tests/, scripts/, configs/, prompts/, skills/, .agent/";
-const DIR_PURPOSES_EN = "docs/ documentation, src/ application code, tests/ tests, scripts/ helper scripts, configs/ configuration files, prompts/ reusable agent prompts, skills/ agent skill definitions, .agent/ agent working notes and state";
-const DIR_PURPOSES_TR = "docs/ dokümantasyon, src/ uygulama kodu, tests/ testler, scripts/ yardımcı betikler, configs/ yapılandırma dosyaları, prompts/ yeniden kullanılabilir agent promptları, skills/ agent yetenek tanımları, .agent/ agent çalışma notları ve durumu";
+// Project scale tiers: quick=1, standard=2, full=3. Each tier includes everything
+// from the tiers below it. Order in these arrays is the canonical file/folder order.
+const SCALE_LEVEL = { quick: 1, standard: 2, full: 3 };
+const CORE_FILE_DEFS = [
+  ["README.md", 1], ["PROJECT_BRIEF.md", 2], ["REQUIREMENTS.md", 2], ["DESIGN.md", 2],
+  ["CLAUDE.md", 1], ["AGENTS.md", 1], ["CODEX.md", 1], ["TASKS.md", 1],
+  ["ROADMAP.md", 3], ["DECISIONS.md", 2], ["CHANGELOG.md", 1], ["LESSONS.md", 3],
+  [".env.example", 2], [".gitignore", 1]
+];
+const CORE_DIR_DEFS = [
+  ["docs/", 1, "documentation", "dokümantasyon"],
+  ["src/", 1, "application code", "uygulama kodu"],
+  ["tests/", 1, "tests", "testler"],
+  ["scripts/", 2, "helper scripts", "yardımcı betikler"],
+  ["configs/", 2, "configuration files", "yapılandırma dosyaları"],
+  ["prompts/", 3, "reusable agent prompts", "yeniden kullanılabilir agent promptları"],
+  ["skills/", 3, "agent skill definitions", "agent yetenek tanımları"],
+  [".agent/", 3, "agent working notes and state", "agent çalışma notları ve durumu"]
+];
+function scaleLvl(scale) { return SCALE_LEVEL[scale] || 3; }
+function filesFor(scale) { const l = scaleLvl(scale); return CORE_FILE_DEFS.filter(d => d[1] <= l).map(d => d[0]).join(", "); }
+function dirsFor(scale) { const l = scaleLvl(scale); return CORE_DIR_DEFS.filter(d => d[1] <= l).map(d => d[0]).join(", "); }
+function dirPurposesFor(scale, lang) { const l = scaleLvl(scale); const i = lang === "tr" ? 3 : 2; return CORE_DIR_DEFS.filter(d => d[1] <= l).map(d => d[0] + " " + d[i]).join(", "); }
+const SCALE_PROMPT_LABEL = { en: { quick: "Quick", standard: "Standard", full: "Full" }, tr: { quick: "Hızlı", standard: "Standart", full: "Tam" } };
 
 const RESP_STRINGS = {
   en: {
@@ -347,6 +372,7 @@ You are a senior software architect and project bootstrap specialist running ins
 - Tech stack: ${d.tech}
 - MVP goal: ${d.mvp}
 - Commands (build/test/run): ${d.commands}
+- Project scale: ${d.scaleLabel} (the core file/folder set below already reflects this)
 - Code writing allowed during bootstrap: ${d.code}
 - Extra notes: ${d.notes}
 
@@ -360,9 +386,9 @@ HARD RULE: In this phase you must NOT create, modify or delete any file or folde
 3. List every missing, ambiguous or conflicting point as a numbered question.
 4. List the top risks for this project type (max 5, one line each).
 5. Propose the bootstrap plan you will execute in Phase 2. Base it on this core set and adapt ONLY with an explicit reason — never silently add or drop items:
-   - Core files: ${CORE_FILES}
-   - Core folders: ${CORE_DIRS}
-   Folder purposes: ${DIR_PURPOSES_EN}.
+   - Core files: ${d.coreFiles}
+   - Core folders: ${d.coreDirs}
+   Folder purposes: ${d.dirPurposes}.
 6. If the project type clearly needs an extra file (e.g. CALIBRATION.md for vision, DATASET.md for AI, COMPLIANCE_GUARDRAILS.md for lead generation), propose it as OPTIONAL with a reason. Do not include it in the plan unless the user approves.
 
 # OUTPUT FORMAT
@@ -386,6 +412,7 @@ If the user requested changes to the plan, apply those changes; otherwise follow
 - Tech stack: ${d.tech}
 - MVP goal: ${d.mvp}
 - Commands (build/test/run): ${d.commands}
+- Project scale: ${d.scaleLabel} (the core file/folder set below already reflects this)
 - Extra notes: ${d.notes}
 
 # TASK
@@ -393,10 +420,10 @@ Create the approved project skeleton inside ${d.root}.
 
 ## Rules
 0. If ${d.root} is not yet a git repository, initialize one (git init) before creating any files — version control first.
-1. Create the core folders first: ${CORE_DIRS}. Put a .gitkeep file in every folder that would otherwise be empty.
-   Folder purposes: ${DIR_PURPOSES_EN}. Document these purposes in README.md's repo layout section.
+1. Create the core folders first: ${d.coreDirs}. Put a .gitkeep file in every folder that would otherwise be empty.
+   Folder purposes: ${d.dirPurposes}. Document these purposes in README.md's repo layout section.
 2. Create every core file with REAL initial content derived from the project context, written in ${d.resp}. Forbidden: empty files, files containing only "TODO", unresolved placeholders.
-3. Minimum content per file:
+3. Minimum content per file (only for files included in this project's scale — ignore any listed file that is not in the core set above):
    - README.md        → what the project is, MVP goal, how the repo is organized, doc links
    - PROJECT_BRIEF.md → goal, target user, MVP definition, explicitly out-of-scope items
    - REQUIREMENTS.md  → functional + non-functional MVP requirements from the context
@@ -408,7 +435,7 @@ Create the approved project skeleton inside ${d.root}.
    - LESSONS.md       → empty template with a short note on how to use it
    - .env.example     → placeholder keys only, NEVER real values or secrets; if the project needs no environment variables, a single comment line saying so is enough
    - .gitignore       → appropriate for ${d.tech} (env files, deps, build artifacts, caches)
-   Consistency requirement: README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md must each state the project name, MVP goal and tech stack verbatim — the validation phase checks this.
+   Consistency requirement: whichever of README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md exist in this project must each state the project name, MVP goal and tech stack verbatim — the validation phase checks this.
 4. Agent rule files — single source of truth, following the AGENTS.md open standard:
    - AGENTS.md is the canonical rules file. Give it these sections: one-line project overview; Setup / build commands; Test commands; Run commands; Code conventions; Commit / PR rules; File reading order; Update discipline (keep TASKS.md and CHANGELOG.md current, log decisions in DECISIONS.md). Populate the command sections from: ${d.commands}.
    - Keep AGENTS.md concise — aim under ~150 lines. Reference other files by path instead of duplicating their content.
@@ -438,10 +465,10 @@ You are an independent project auditor, PHASE 3 of 3. Assume NOTHING from previo
 In this phase you must NOT fix, modify, create or delete anything. Audit and report only.
 
 # CHECKLIST
-A. STRUCTURE  — All core files exist: ${CORE_FILES}.
-   All core folders exist: ${CORE_DIRS}.
+A. STRUCTURE  — All core files exist: ${d.coreFiles}.
+   All core folders exist: ${d.coreDirs}.
 B. CONTENT    — No core file is empty or trivial; no unresolved placeholders ({{...}}, TBD, lorem, "TODO"-only sections).
-C. CONSISTENCY — Project name, MVP goal and tech stack are identical across README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md. TASKS.md actually leads to the MVP goal.
+C. CONSISTENCY — Project name, MVP goal and tech stack are identical across whichever of README.md, PROJECT_BRIEF.md, REQUIREMENTS.md and ROADMAP.md exist. TASKS.md actually leads to the MVP goal.
 D. AGENT RULES — AGENTS.md is the canonical rules file following the open standard (overview, setup/build, test, run commands, conventions, reading order, update discipline) and records the actual build/test/run commands; CLAUDE.md and CODEX.md point to it and do not contradict it.
 E. SAFETY     — .env.example contains no real secrets (a comment-only file is fine if the project uses no environment variables). .gitignore covers env files, dependencies and build artifacts for ${d.tech}.
 F. SCOPE      — ${d.scopeRule}
@@ -507,6 +534,7 @@ Sen ${d.agent} içinde çalışan kıdemli bir yazılım mimarı ve proje bootst
 - Teknoloji: ${d.tech}
 - MVP hedefi: ${d.mvp}
 - Komutlar (build/test/çalıştır): ${d.commands}
+- Proje ölçeği: ${d.scaleLabel} (aşağıdaki çekirdek dosya/klasör seti bunu zaten yansıtıyor)
 - Bootstrap sırasında kod yazma izni: ${d.code}
 - Ek notlar: ${d.notes}
 
@@ -520,9 +548,9 @@ KESİN KURAL: Bu aşamada hiçbir dosya veya klasör oluşturamaz, değiştireme
 3. Eksik, belirsiz veya çelişkili her noktayı numaralı soru olarak listele.
 4. Bu proje tipi için en büyük riskleri listele (en fazla 5, her biri tek satır).
 5. 2. aşamada uygulayacağın bootstrap planını öner. Şu çekirdek seti temel al ve YALNIZCA açık gerekçeyle uyarla — asla sessizce ekleme veya çıkarma yapma:
-   - Çekirdek dosyalar: ${CORE_FILES}
-   - Çekirdek klasörler: ${CORE_DIRS}
-   Klasör amaçları: ${DIR_PURPOSES_TR}.
+   - Çekirdek dosyalar: ${d.coreFiles}
+   - Çekirdek klasörler: ${d.coreDirs}
+   Klasör amaçları: ${d.dirPurposes}.
 6. Proje tipi açıkça ek bir dosya gerektiriyorsa (örn. vision için CALIBRATION.md, AI için DATASET.md, lead generation için COMPLIANCE_GUARDRAILS.md), gerekçesiyle birlikte OPSİYONEL olarak öner. Kullanıcı onaylamadan plana dahil etme.
 
 # ÇIKTI FORMATI
@@ -546,6 +574,7 @@ Kullanıcı planda değişiklik istediyse o değişiklikleri uygula; aksi halde 
 - Teknoloji: ${d.tech}
 - MVP hedefi: ${d.mvp}
 - Komutlar (build/test/çalıştır): ${d.commands}
+- Proje ölçeği: ${d.scaleLabel} (aşağıdaki çekirdek dosya/klasör seti bunu zaten yansıtıyor)
 - Ek notlar: ${d.notes}
 
 # GÖREV
@@ -553,10 +582,10 @@ Onaylanan proje iskeletini ${d.root} içinde oluştur.
 
 ## Kurallar
 0. ${d.root} henüz bir git deposu değilse, dosyaları oluşturmadan önce bir git deposu başlat (git init) — önce sürüm kontrolü.
-1. Önce çekirdek klasörleri oluştur: ${CORE_DIRS}. Aksi halde boş kalacak her klasöre bir .gitkeep dosyası koy.
-   Klasör amaçları: ${DIR_PURPOSES_TR}. Bu amaçları README.md'nin depo düzeni bölümünde belgele.
+1. Önce çekirdek klasörleri oluştur: ${d.coreDirs}. Aksi halde boş kalacak her klasöre bir .gitkeep dosyası koy.
+   Klasör amaçları: ${d.dirPurposes}. Bu amaçları README.md'nin depo düzeni bölümünde belgele.
 2. Her çekirdek dosyayı proje bağlamından türetilmiş GERÇEK başlangıç içeriğiyle, ${d.resp} dilinde oluştur. Yasak: boş dosyalar, yalnızca "TODO" içeren dosyalar, çözülmemiş placeholder'lar.
-3. Dosya başına asgari içerik:
+3. Dosya başına asgari içerik (yalnızca bu projenin ölçeğine dahil dosyalar için — yukarıdaki çekirdek sette olmayan dosyaları yok say):
    - README.md        → projenin ne olduğu, MVP hedefi, depo düzeni, doküman bağlantıları
    - PROJECT_BRIEF.md → hedef, hedef kullanıcı, MVP tanımı, açıkça kapsam dışı maddeler
    - REQUIREMENTS.md  → bağlamdan türetilen işlevsel + işlevsel olmayan MVP gereksinimleri
@@ -568,7 +597,7 @@ Onaylanan proje iskeletini ${d.root} içinde oluştur.
    - LESSONS.md       → nasıl kullanılacağına dair kısa notlu boş şablon
    - .env.example     → yalnızca placeholder anahtarlar, ASLA gerçek değer veya gizli bilgi; proje ortam değişkeni kullanmıyorsa bunu belirten tek yorum satırı yeterli
    - .gitignore       → ${d.tech} için uygun (env dosyaları, bağımlılıklar, build çıktıları, önbellekler)
-   Tutarlılık şartı: README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md, proje adını, MVP hedefini ve teknolojiyi birebir içermelidir — doğrulama aşaması bunu denetler.
+   Tutarlılık şartı: README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md dosyalarından bu projede var olanlar, proje adını, MVP hedefini ve teknolojiyi birebir içermelidir — doğrulama aşaması bunu denetler.
 4. Agent kural dosyaları — tek doğruluk kaynağı, AGENTS.md açık standardını izler:
    - AGENTS.md kuralların ana dosyasıdır. Şu bölümleri içersin: tek satırlık proje özeti; Kurulum / derleme komutları; Test komutları; Çalıştırma komutları; Kod konvansiyonları; Commit / PR kuralları; dosya okuma sırası; güncelleme disiplini (TASKS.md ve CHANGELOG.md güncel tutulur, kararlar DECISIONS.md'ye işlenir). Komut bölümlerini şundan doldur: ${d.commands}.
    - AGENTS.md'yi kısa tut — ~150 satırın altını hedefle. İçeriği kopyalamak yerine diğer dosyalara yol ile referans ver.
@@ -598,10 +627,10 @@ Bağımsız bir proje denetçisisin, 3 aşamanın 3.'sü. Önceki aşamalardan H
 Bu aşamada hiçbir şeyi düzeltemez, değiştiremez, oluşturamaz veya silemezsin. Yalnızca denetle ve raporla.
 
 # KONTROL LİSTESİ
-A. YAPI       — Tüm çekirdek dosyalar mevcut: ${CORE_FILES}.
-   Tüm çekirdek klasörler mevcut: ${CORE_DIRS}.
+A. YAPI       — Tüm çekirdek dosyalar mevcut: ${d.coreFiles}.
+   Tüm çekirdek klasörler mevcut: ${d.coreDirs}.
 B. İÇERİK     — Hiçbir çekirdek dosya boş veya geçiştirilmiş değil; çözülmemiş placeholder yok ({{...}}, TBD, lorem, yalnızca "TODO" içeren bölümler).
-C. TUTARLILIK — Proje adı, MVP hedefi ve teknoloji README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md genelinde birebir aynı. TASKS.md gerçekten MVP hedefine götürüyor.
+C. TUTARLILIK — Proje adı, MVP hedefi ve teknoloji README.md, PROJECT_BRIEF.md, REQUIREMENTS.md ve ROADMAP.md dosyalarından var olanlar genelinde birebir aynı. TASKS.md gerçekten MVP hedefine götürüyor.
 D. AGENT KURALLARI — AGENTS.md açık standardı izleyen ana kural dosyası (özet, kurulum/derleme, test, çalıştırma komutları, konvansiyonlar, okuma sırası, güncelleme disiplini) ve gerçek build/test/çalıştırma komutlarını içeriyor; CLAUDE.md ve CODEX.md ona yönlendiriyor ve onunla çelişmiyor.
 E. GÜVENLİK   — .env.example gerçek gizli bilgi içermiyor (proje ortam değişkeni kullanmıyorsa yalnızca yorum satırı içeren dosya kabul edilir). .gitignore, ${d.tech} için env dosyalarını, bağımlılıkları ve build çıktılarını kapsıyor.
 F. KAPSAM     — ${d.scopeRule}
@@ -658,7 +687,7 @@ ${d.q4}`
 function defaults() {
   return {
     ui: { lang: "tr", theme: null },
-    f: { name: "", root: "", desc: "", type: "", tech: "", mvp: "", commands: "", agent: "Claude Code", promptLang: "en", respLang: "tr", notes: "", code: false }
+    f: { name: "", root: "", desc: "", type: "", tech: "", mvp: "", commands: "", scale: "full", agent: "Claude Code", promptLang: "en", respLang: "tr", notes: "", code: false }
   };
 }
 
@@ -671,7 +700,7 @@ if (state.f.agent === "Agent") state.f.agent = "a coding agent";
 
 function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
-const TIP_KEYS = ["name", "root", "desc", "type", "tech", "mvp", "commands", "agent", "promptLang", "respLang", "notes", "code"];
+const TIP_KEYS = ["name", "root", "desc", "type", "tech", "mvp", "commands", "scale", "agent", "promptLang", "respLang", "notes", "code"];
 const REQUIRED_IDS = ["f-name", "f-root", "f-desc", "f-type", "f-tech", "f-mvp"];
 
 function updateReqStyles() {
@@ -687,7 +716,7 @@ const FIELD_MAP = [
   ["f-name", "name"], ["f-root", "root"], ["f-desc", "desc"], ["f-tech", "tech"],
   ["f-mvp", "mvp"], ["f-commands", "commands"], ["f-notes", "notes"]
 ];
-const SELECT_MAP = [["f-type", "type"], ["f-agent", "agent"], ["f-promptlang", "promptLang"], ["f-resplang", "respLang"]];
+const SELECT_MAP = [["f-type", "type"], ["f-scale", "scale"], ["f-agent", "agent"], ["f-promptlang", "promptLang"], ["f-resplang", "respLang"]];
 
 function buildSelects() {
   const L = I18N[state.ui.lang];
@@ -730,6 +759,15 @@ function buildSelects() {
     rl.appendChild(o);
   });
   rl.value = state.f.respLang;
+
+  const sc = $("f-scale");
+  sc.innerHTML = "";
+  ["quick", "standard", "full"].forEach(k => {
+    const o = document.createElement("option");
+    o.value = k; o.textContent = L.scaleNames[k];
+    sc.appendChild(o);
+  });
+  sc.value = state.f.scale;
 }
 
 function applyLabels() {
@@ -737,7 +775,7 @@ function applyLabels() {
   document.documentElement.lang = state.ui.lang;
   $("t-subtitle").textContent = L.subtitle;
   $("t-formTitle").textContent = L.formTitle;
-  ["name", "root", "desc", "type", "tech", "mvp", "commands", "agent", "promptLang", "respLang", "notes", "code"].forEach(k => {
+  ["name", "root", "desc", "type", "tech", "mvp", "commands", "scale", "agent", "promptLang", "respLang", "notes", "code"].forEach(k => {
     $("l-" + k).textContent = L[k];
   });
   $("t-autosave").textContent = L.autosave;
@@ -811,6 +849,10 @@ function renderPrompts() {
     codeRule, scopeRule,
     resp: PL === "en" ? (f.respLang === "tr" ? "Turkish" : "English") : (f.respLang === "tr" ? "Türkçe" : "İngilizce")
   };
+  d.coreFiles = filesFor(f.scale);
+  d.coreDirs = dirsFor(f.scale);
+  d.dirPurposes = dirPurposesFor(f.scale, PL);
+  d.scaleLabel = (SCALE_PROMPT_LABEL[PL] || SCALE_PROMPT_LABEL.en)[f.scale] || (SCALE_PROMPT_LABEL[PL] || SCALE_PROMPT_LABEL.en).full;
   const rs = RESP_STRINGS[f.respLang] || RESP_STRINGS.en;
   d.struct1 = rs.p1struct; d.q1 = rs.p1q;
   d.struct2 = rs.p2struct; d.end2 = rs.p2end;
