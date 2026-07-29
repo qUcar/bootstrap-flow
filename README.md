@@ -1,50 +1,74 @@
-# Bootstrap Flow — Prompt Üretici
+# Bootstrap Flow
 
-Yerel, tek dosyalık HTML aracı. Proje bilgilerini formdan alır ve Claude Code, Fable, Codex, Cursor gibi agent'lara verilecek 3 aşamalı "Project Bootstrap Flow" promptları üretir.
+[![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
 
-**Bu araç dosya veya klasör oluşturmaz.** Dosya üretimini, promptları verdiğiniz agent yapar.
+Türkçe: [README.tr.md](README.tr.md)
 
-## Kullanım
+Bootstrap Flow is an offline, single-file prompt generator for bootstrapping software projects with coding agents such as Codex, Claude Code, and Cursor.
 
-1. `index.html` dosyasını çift tıklayıp tarayıcıda açın (internet gerekmez).
-2. Formu doldurun — form her değişiklikte tarayıcıya otomatik kaydedilir.
-3. Üretilen 3 promptu **sırayla** agent'a verin:
+**Important Note**: Bootstrap Flow **does not contain or call an LLM**. It generates prompts locally for you to pass to your preferred coding agent.
 
-| Sıra | Prompt | Ne yapar | Ne beklemeli |
-|------|--------|----------|--------------|
-| 1 | Anlama ve plan | Agent projeyi sentezler, plan sunar | Dosya üretmez; sizden **onay** ister |
-| 2 | Bootstrap | Agent klasör ve kök `.md` dosyalarını oluşturur | Üretim raporu verir |
-| 3 | Doğrulama | Agent üretilenleri denetler (tercihen **yeni oturumda** verin) | PASS/WARN/FAIL raporu; düzeltme için onay ister |
+## Live Demo
+[https://qUcar.github.io/bootstrap-flow/](https://qUcar.github.io/bootstrap-flow/)
 
-Projeye sonraki oturumlarda dönerken 4. promptu kullanın:
+## How it works
 
-| Sıra | Prompt | Ne yapar | Ne beklemeli |
-|------|--------|----------|--------------|
-| 4 | Devam / Güncelle | Agent izleme dosyalarını gerçek durumla karşılaştırır | Durum özeti + TASKS/CHANGELOG güncelleme önerisi + sıradaki adımlar; onaysız değişiklik yapmaz |
+This tool is a standalone HTML file that takes your project requirements via a form and generates a structured, multi-phase prompt sequence.
 
-## Özellikler
+### Four-Phase Workflow
 
-- Sade-modern arayüz, karanlık/aydınlık tema
-- TR/EN arayüz dili; prompt dili (EN önerilen / TR) ve agent cevap dili ayrı ayrı seçilebilir
-- Proje tipi seçilince teknoloji ve MVP alanlarında örnek ipuçları görünür
-- Karakter sayacı ve tek tık kopyalama
-- Veriler yalnızca tarayıcının localStorage'ında tutulur; hiçbir yere gönderilmez
+1. **Understand and plan**: The agent analyzes your project details and proposes an implementation plan. This generates no files and requires your explicit approval.
+2. **Bootstrap**: Once you approve the Phase 1 plan, you paste it back into the generator. The agent then creates the necessary directories and core markdown files.
+3. **Validate**: The agent validates the generated structure (preferably in a fresh session) and reports PASS/WARN/FAIL status.
+4. **Resume and update**: Used when returning to an existing project. The agent reads tracking files to summarize the current state and proposes next steps without making unapproved changes.
 
-## Üretilen promptların hedef projede oluşturttuğu çekirdek set
+## Features
 
-Dosyalar: `README.md`, `PROJECT_BRIEF.md`, `REQUIREMENTS.md`, `DESIGN.md`, `CLAUDE.md`, `AGENTS.md`, `CODEX.md`, `TASKS.md`, `ROADMAP.md`, `DECISIONS.md`, `CHANGELOG.md`, `LESSONS.md`, `.env.example`, `.gitignore`
+- **Project Scales**: Choose between Quick (7 files), Standard (12 files), and Full (14 files) to match your project's complexity.
+- **Bilingual Support**: Generates prompts in English or Turkish, with independent settings for the UI language and agent response language.
+- **Privacy First**: Completely offline. All form data is stored locally in your browser's `localStorage`. No telemetry or backend.
 
-Klasörler: `docs/`, `src/`, `tests/`, `scripts/`, `configs/`, `prompts/`, `skills/`, `.agent/`
+## Local Usage
 
-Kural dosyalarında tek doğruluk kaynağı `AGENTS.md`'dir; `CLAUDE.md` ve `CODEX.md` ona yönlendirir.
+Simply open `index.html` in your browser. No internet connection is required.
 
-## Sürüm
+## Development
 
-- v0.6 — **Proje ölçeği seçici (Hızlı / Standart / Tam).** Çekirdek dosya/klasör seti proje büyüklüğüne göre ayarlanır: Hızlı = 7 dosya + 3 klasör (küçük betik), Standart = 12 + 5, Tam = 14 + 8 (varsayılan, kapsamlı proje). Her kademe alttakini kapsar. Araştırmanın "küçük iş için 14 dosya fazla" bulgusunu çözer; tutarlılık ve doğrulama kuralları ölçeğe göre uyarlanır.
-- v0.5 — **AGENTS.md kalite paketi.** Opsiyonel "Komutlar" alanı: agent build/test/run komutlarını AGENTS.md'ye yazar (araştırmaya göre agent'a en çok yarayan içerik). AGENTS.md artık açık standardın başlıklarıyla üretilir ve "ince tut, kopyalama yerine referans ver" kuralına uyar. Bootstrap'a `git init` 0. adımı eklendi. Projeye `STATUS.md` (gidişat takip dosyası) eklendi.
-- v0.4 — **4. prompt: Devam / Güncelle.** Projeye sonraki oturumlarda dönerken kullanılır: agent izleme dosyalarını okur, TASKS.md'yi depodaki gerçek durumla mutabık kılar, CHANGELOG eksiklerini bulur, güncelleme önerisi sunar ve sıradaki 1-3 adımı söyler; onaysız değişiklik yapmaz.
-- v0.3 — Zorunlu alanlarda ince kırmızı/yeşil çerçeve; tüm alanlarda "i" bilgi balonları (açıklama + örnek; hover, tık ve klavye ile açılır; TR/EN).
-- v0.2 — Dogfooding sonrası şablon düzeltmeleri: kapanış cümleleri ve bölüm başlıkları cevap diline göre üretilir, Bootstrap–Validation tutarlılık şartı, denetim istisnaları (onaylı sapmalar, LESSONS.md), esnek `.env.example` kuralı, klasör amaç tanımları, içerik dili kuralı.
-- v0.1 — İlk MVP.
+The project is structured such that `src/features/` contains the prompt generation source of truth.
 
-Planlanan v2: proje tipine özel ek dosya paketleri (ör. vision → `CALIBRATION.md`), JSON dışa/içe aktarma, çoklu proje profilleri, şablon düzenleme modu.
+### Commands
+
+```bash
+# Build the single-file HTML artifact
+npm run build
+
+# Run syntax checks
+npm run check
+
+# Run tests
+npm test
+
+# Run full verification pipeline
+npm run verify
+```
+
+## Architecture
+
+Bootstrap Flow uses a DOM-independent prompt generation core (`src/features/`). The build process bundles these modules into a designated `PROMPT_CORE` region within `index.html`. It relies solely on built-in Node.js tools with no external production dependencies.
+
+## Current Alpha Limitations
+
+- Alpha status with limited real-world field testing.
+- Profile import/export and multi-profile support are incomplete.
+- Ongoing accessibility verification.
+- Coding-agent output still requires user review.
+
+## Roadmap Summary
+
+Future updates (v2) will introduce project-specific file packages (e.g., vision -> CALIBRATION.md), JSON export/import for profiles, multi-profile support, and a template editing mode.
+
+## Resources
+
+- [Contributing](CONTRIBUTING.md)
+- [Security Policy](SECURITY.md)
+- [License (MIT)](LICENSE)

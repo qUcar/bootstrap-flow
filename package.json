@@ -1,0 +1,16 @@
+{
+  "name": "bootstrap-flow",
+  "version": "0.7.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:check": "node scripts/build.mjs --check",
+    "check": "node --check scripts/build.mjs && node --check src/features/template-catalog/project-structure.mjs && node --check src/features/template-catalog/response-contracts.mjs && node --check src/features/template-catalog/prompt-templates-en.mjs && node --check src/features/template-catalog/prompt-templates-tr.mjs && node --check src/features/prompt-generation/prompt-generator.mjs && node --check tests/index-app-harness.mjs && node --check tests/integration/prompt-output.test.mjs",
+    "test": "node --test",
+    "verify": "npm run build:check && npm run check && npm test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

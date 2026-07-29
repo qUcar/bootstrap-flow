@@ -115,6 +115,7 @@ footer{margin-top:28px;font-size:12px;color:var(--text-3);text-align:center;line
   </div>
   <div class="field"><div class="lbl"><label id="l-mvp" for="f-mvp">MVP hedefi</label><span class="info" tabindex="0">i<span class="tip" id="tip-mvp"></span></span></div><textarea id="f-mvp"></textarea></div>
   <div class="field"><div class="lbl"><label id="l-commands" for="f-commands">Komutlar (opsiyonel)</label><span class="info" tabindex="0">i<span class="tip" id="tip-commands"></span></span></div><textarea id="f-commands" style="min-height:38px"></textarea></div>
+  <div class="field"><div class="lbl"><label id="l-approvedPlan" for="f-approved-plan">Onaylanan plan (2. aşama için)</label><span class="info" tabindex="0">i<span class="tip" id="tip-approvedPlan"></span></span></div><textarea id="f-approved-plan"></textarea></div>
   <div class="field"><div class="lbl"><label id="l-scale" for="f-scale">Proje ölçeği</label><span class="info" tabindex="0">i<span class="tip" id="tip-scale"></span></span></div><select id="f-scale"></select></div>
   <div class="grid2">
     <div class="field"><div class="lbl"><label id="l-agent" for="f-agent">Agent tipi</label><span class="info" tabindex="0">i<span class="tip" id="tip-agent"></span></span></div><select id="f-agent"></select></div>
@@ -172,7 +173,7 @@ const I18N = {
     formTitle: "Proje bilgileri",
     name: "Proje adı", root: "Kök klasör yolu", desc: "Kısa açıklama", type: "Proje tipi",
     tech: "Teknoloji", mvp: "MVP hedefi", agent: "Agent tipi", promptLang: "Prompt dili",
-    respLang: "Cevap dili", notes: "Ek notlar (opsiyonel)", commands: "Komutlar (opsiyonel)", scale: "Proje ölçeği", code: "Bootstrap sırasında kod yazılsın",
+    respLang: "Cevap dili", notes: "Ek notlar (opsiyonel)", commands: "Komutlar (opsiyonel)", approvedPlan: "Onaylanan plan (2. aşama için)", scale: "Proje ölçeği", code: "Bootstrap sırasında kod yazılsın",
     autosave: "Form otomatik kaydedilir", clear: "Formu temizle",
     confirmClear: "Tüm form alanları temizlensin mi?",
     outTitle: "Üretilen promptlar", outHint: "sırayla agent'a verin",
@@ -180,12 +181,12 @@ const I18N = {
     copy: "Kopyala", copied: "Kopyalandı ✓", chars: "karakter",
     p1: "1. Anlama ve plan", p2: "2. Bootstrap", p3: "3. Doğrulama", p4: "4. Devam / Güncelle",
     g1: "İlk bu promptu verin. Agent plan sunar ve onayınızı bekler; dosya oluşturmaz.",
-    g2: "Planı onayladıktan sonra verin. Agent klasör ve dosyaları oluşturur, rapor verir.",
+    g2: "1. aşama çıktısındaki onaylanan planı forma yapıştırdıktan sonra verin. Agent klasör ve dosyaları oluşturur, rapor verir.",
     g3: "Bootstrap bitince, tercihen yeni bir agent oturumunda verin. Agent denetler ve düzeltme için onay bekler.",
     g4: "Projeye sonraki oturumlarda dönerken verin. Agent durumu çıkarır, TASKS ve CHANGELOG güncellemesi önerir, sıradaki adımları söyler; onaysız değişiklik yapmaz.",
     resumeHead: "Sonraki oturumlar için",
-    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.6",
-    phName: "Örn. VisionVp", phRoot: "C:\\Projeler\\proje-adi", phDesc: "Projenin tek paragraflık özeti", phNotes: "Riskler, özel kurallar, mevcut durum…", phCommands: "Örn: python -m pytest · python src/main.py",
+    footer: "Bu araç dosya veya klasör oluşturmaz; yalnızca prompt üretir. Verileriniz tarayıcınızda saklanır. — Bootstrap Flow v0.7.0-alpha.1",
+    phName: "Örn. VisionVp", phRoot: "C:\\Projeler\\proje-adi", phDesc: "Projenin tek paragraflık özeti", phNotes: "Riskler, özel kurallar, mevcut durum…", phCommands: "Örn: python -m pytest · python src/main.py", phApprovedPlan: "1. aşamada agent'ın sunduğu ve sizin onayladığınız planı buraya yapıştırın",
     typePlaceholder: "Seçin…",
     typeNames: { vision: "Vision / görüntü işleme", ai: "AI / makine öğrenmesi", web: "Web uygulaması", scraping: "Scraping / veri toplama", lead: "Lead generation", agent: "Agent sistemi", automation: "Yazılım otomasyonu", other: "Diğer" },
     promptLangs: { en: "English (önerilen)", tr: "Türkçe" },
@@ -205,6 +206,7 @@ const I18N = {
       respLang: { t: "Agent'ın cevaplarının ve oluşturacağı dosya içeriklerinin dili.", e: "Örn: Türkçe" },
       notes: { t: "Riskler, özel kurallar veya mevcut durum gibi ek bilgiler. Boş bırakılabilir.", e: "Örn: Üçüncü parti kütüphane kullanılmayacak" },
       commands: { t: "Projeyi çalıştırma, test ve derleme komutları. AGENTS.md'ye yazılır — araştırmalara göre agent'a en çok yarayan bilgi budur. Boş bırakırsan agent teknolojiden çıkarmaya çalışır.", e: "Örn: pytest · python src/main.py" },
+      approvedPlan: { t: "1. aşamada agent'ın sunduğu ve sizin onayladığınız plan. 2. Bootstrap promptu bu içeriği yeni oturuma taşır; plan yoksa agent üretime başlamaz.", e: "Örn: Onaylanan plan tablosunun tamamı" },
       scale: { t: "Kaç çekirdek dosya/klasör üretilecek. Hızlı=7 dosya (küçük betik), Standart=12, Tam=14 (kapsamlı proje). Her kademe alttakini kapsar.", e: "Örn: Küçük bir araç için Hızlı" },
       code: { t: "İşaretlenirse agent bootstrap sırasında src/ içine minimal bir başlangıç kodu da yazar; işaretlenmezse yalnızca dosya iskeleti kurulur.", e: "Örn: Kapalı bırakın — önce plan, kod sonra" }
     }
@@ -214,7 +216,7 @@ const I18N = {
     formTitle: "Project details",
     name: "Project name", root: "Root folder path", desc: "Short description", type: "Project type",
     tech: "Tech stack", mvp: "MVP goal", agent: "Agent type", promptLang: "Prompt language",
-    respLang: "Response language", notes: "Extra notes (optional)", commands: "Commands (optional)", scale: "Project scale", code: "Allow code writing during bootstrap",
+    respLang: "Response language", notes: "Extra notes (optional)", commands: "Commands (optional)", approvedPlan: "Approved plan (for Phase 2)", scale: "Project scale", code: "Allow code writing during bootstrap",
     autosave: "Form is saved automatically", clear: "Clear form",
     confirmClear: "Clear all form fields?",
     outTitle: "Generated prompts", outHint: "give to the agent in order",
@@ -222,12 +224,12 @@ const I18N = {
     copy: "Copy", copied: "Copied ✓", chars: "characters",
     p1: "1. Understand & plan", p2: "2. Bootstrap", p3: "3. Validation", p4: "4. Resume & update",
     g1: "Give this prompt first. The agent presents a plan and waits for your approval; it creates nothing.",
-    g2: "Give after approving the plan. The agent creates folders and files, then reports.",
+    g2: "Give after pasting the approved Phase 1 plan into the form. The agent creates folders and files, then reports.",
     g3: "Run after bootstrap, preferably in a fresh agent session. The agent audits and waits for approval to fix.",
     g4: "Give this when returning to the project in later sessions. The agent maps the state, proposes TASKS and CHANGELOG updates and suggests next steps; it changes nothing without approval.",
     resumeHead: "For later sessions",
-    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.6",
-    phName: "e.g. VisionVp", phRoot: "C:\\Projects\\my-project", phDesc: "One-paragraph summary of the project", phNotes: "Risks, special rules, current state…", phCommands: "e.g. python -m pytest · python src/main.py",
+    footer: "This tool never creates files or folders; it only generates prompts. Your data stays in your browser. — Bootstrap Flow v0.7.0-alpha.1",
+    phName: "e.g. VisionVp", phRoot: "C:\\Projects\\my-project", phDesc: "One-paragraph summary of the project", phNotes: "Risks, special rules, current state…", phCommands: "e.g. python -m pytest · python src/main.py", phApprovedPlan: "Paste the plan proposed by the agent in Phase 1 and approved by you",
     typePlaceholder: "Select…",
     typeNames: { vision: "Vision / image processing", ai: "AI / machine learning", web: "Web application", scraping: "Scraping / data collection", lead: "Lead generation", agent: "Agent system", automation: "Software automation", other: "Other" },
     promptLangs: { en: "English (recommended)", tr: "Turkish" },
@@ -247,6 +249,7 @@ const I18N = {
       respLang: { t: "Language of the agent's replies and of the file contents it creates.", e: "e.g. Turkish" },
       notes: { t: "Extra information such as risks, special rules or current state. Can be left empty.", e: "e.g. No third-party libraries" },
       commands: { t: "Commands to run, test and build the project. Written into AGENTS.md — research shows this is the highest-value info for the agent. Leave empty and the agent will try to infer them from the tech stack.", e: "e.g. pytest · python src/main.py" },
+      approvedPlan: { t: "The plan proposed by the agent in Phase 1 and approved by you. The Bootstrap prompt carries it into a fresh session; without it, the agent will not start creating files.", e: "e.g. The complete approved plan table" },
       scale: { t: "How many core files/folders get generated. Quick=7 files (small script), Standard=12, Full=14 (comprehensive project). Each tier includes the ones below it.", e: "e.g. Quick for a small tool" },
       code: { t: "If checked, the agent also writes a minimal starting point into src/ during bootstrap; if unchecked, only the file skeleton is created.", e: "e.g. Leave off — plan first, code later" }
     }
@@ -290,14 +293,28 @@ const TYPE_HINTS = {
 
 // Project scale tiers: quick=1, standard=2, full=3. Each tier includes everything
 // from the tiers below it. Order in these arrays is the canonical file/folder order.
+/* PROMPT_CORE_START */
+// Source: src/features/template-catalog/project-structure.mjs
 const SCALE_LEVEL = { quick: 1, standard: 2, full: 3 };
-const CORE_FILE_DEFS = [
-  ["README.md", 1], ["PROJECT_BRIEF.md", 2], ["REQUIREMENTS.md", 2], ["DESIGN.md", 2],
-  ["CLAUDE.md", 1], ["AGENTS.md", 1], ["CODEX.md", 1], ["TASKS.md", 1],
-  ["ROADMAP.md", 3], ["DECISIONS.md", 2], ["CHANGELOG.md", 1], ["LESSONS.md", 3],
-  [".env.example", 2], [".gitignore", 1]
+
+const CORE_FILE_DEFINITIONS = [
+  ["README.md", 1],
+  ["PROJECT_BRIEF.md", 2],
+  ["REQUIREMENTS.md", 2],
+  ["DESIGN.md", 2],
+  ["CLAUDE.md", 1],
+  ["AGENTS.md", 1],
+  ["CODEX.md", 1],
+  ["TASKS.md", 1],
+  ["ROADMAP.md", 3],
+  ["DECISIONS.md", 2],
+  ["CHANGELOG.md", 1],
+  ["LESSONS.md", 3],
+  [".env.example", 2],
+  [".gitignore", 1],
 ];
-const CORE_DIR_DEFS = [
+
+const CORE_DIRECTORY_DEFINITIONS = [
   ["docs/", 1, "documentation", "dokümantasyon"],
   ["src/", 1, "application code", "uygulama kodu"],
   ["tests/", 1, "tests", "testler"],
@@ -305,15 +322,40 @@ const CORE_DIR_DEFS = [
   ["configs/", 2, "configuration files", "yapılandırma dosyaları"],
   ["prompts/", 3, "reusable agent prompts", "yeniden kullanılabilir agent promptları"],
   ["skills/", 3, "agent skill definitions", "agent yetenek tanımları"],
-  [".agent/", 3, "agent working notes and state", "agent çalışma notları ve durumu"]
+  [".agent/", 3, "agent working notes and state", "agent çalışma notları ve durumu"],
 ];
-function scaleLvl(scale) { return SCALE_LEVEL[scale] || 3; }
-function filesFor(scale) { const l = scaleLvl(scale); return CORE_FILE_DEFS.filter(d => d[1] <= l).map(d => d[0]).join(", "); }
-function dirsFor(scale) { const l = scaleLvl(scale); return CORE_DIR_DEFS.filter(d => d[1] <= l).map(d => d[0]).join(", "); }
-function dirPurposesFor(scale, lang) { const l = scaleLvl(scale); const i = lang === "tr" ? 3 : 2; return CORE_DIR_DEFS.filter(d => d[1] <= l).map(d => d[0] + " " + d[i]).join(", "); }
-const SCALE_PROMPT_LABEL = { en: { quick: "Quick", standard: "Standard", full: "Full" }, tr: { quick: "Hızlı", standard: "Standart", full: "Tam" } };
 
-const RESP_STRINGS = {
+const SCALE_PROMPT_LABELS = {
+  en: { quick: "Quick", standard: "Standard", full: "Full" },
+  tr: { quick: "Hızlı", standard: "Standart", full: "Tam" },
+};
+
+const scaleLevel = (scale) => SCALE_LEVEL[scale] || SCALE_LEVEL.full;
+
+const selectForScale = (definitions, scale) => {
+  const selectedLevel = scaleLevel(scale);
+  return definitions.filter((definition) => definition[1] <= selectedLevel);
+};
+
+const filesFor = (scale) =>
+  selectForScale(CORE_FILE_DEFINITIONS, scale)
+    .map((definition) => definition[0])
+    .join(", ");
+
+const directoriesFor = (scale) =>
+  selectForScale(CORE_DIRECTORY_DEFINITIONS, scale)
+    .map((definition) => definition[0])
+    .join(", ");
+
+const directoryPurposesFor = (scale, language) => {
+  const purposeIndex = language === "tr" ? 3 : 2;
+  return selectForScale(CORE_DIRECTORY_DEFINITIONS, scale)
+    .map((definition) => `${definition[0]} ${definition[purposeIndex]}`)
+    .join(", ");
+};
+
+// Source: src/features/template-catalog/response-contracts.mjs
+const RESPONSE_CONTRACTS = {
   en: {
     p1struct: `1. Understanding (max 10 lines)
 2. Open questions (numbered)
@@ -334,7 +376,7 @@ const RESP_STRINGS = {
 2. Reconciliation findings — table: Finding | File | Suggested update
 3. Proposed file updates (exact new content)
 4. Next steps (1-3, ordered, with reason)`,
-    p4q: `"Shall I apply the proposed updates to the tracking files? I will not modify anything until you confirm."`
+    p4q: `"Shall I apply the proposed updates to the tracking files? I will not modify anything until you confirm."`,
   },
   tr: {
     p1struct: `1. Anlayış (en fazla 10 satır)
@@ -356,12 +398,13 @@ const RESP_STRINGS = {
 2. Mutabakat bulguları — tablo: Bulgu | Dosya | Önerilen güncelleme
 3. Önerilen dosya güncellemeleri (yeni içerik birebir)
 4. Sıradaki adımlar (1-3, sıralı, gerekçeli)`,
-    p4q: `"Önerilen güncellemeleri izleme dosyalarına uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`
-  }
+    p4q: `"Önerilen güncellemeleri izleme dosyalarına uygulayayım mı? Sen onaylamadan hiçbir şeyi değiştirmeyeceğim."`,
+  },
 };
 
-const T_EN = {
-  p1: d => `# ROLE
+// Source: src/features/template-catalog/prompt-templates-en.mjs
+const EN_PROMPT_TEMPLATES = {
+  p1: (d) => `# ROLE
 You are a senior software architect and project bootstrap specialist running inside ${d.agent}.
 
 # PROJECT CONTEXT
@@ -400,7 +443,7 @@ End your response with exactly this question and then stop:
 ${d.q1}
 Wait for explicit user approval. Do not proceed on your own.`,
 
-  p2: d => `# ROLE
+  p2: (d) => `# ROLE
 Same architect, PHASE 2 of 3. The user has APPROVED the bootstrap plan from Phase 1.
 If the user requested changes to the plan, apply those changes; otherwise follow the approved plan exactly.
 
@@ -413,7 +456,15 @@ If the user requested changes to the plan, apply those changes; otherwise follow
 - MVP goal: ${d.mvp}
 - Commands (build/test/run): ${d.commands}
 - Project scale: ${d.scaleLabel} (the core file/folder set below already reflects this)
+- Core files selected for this scale: ${d.coreFiles}
 - Extra notes: ${d.notes}
+
+# APPROVED PHASE 1 PLAN
+Only the content between the delimiters below is the approved plan for this phase.
+<approved_phase_1_plan>
+${d.approvedPlan}
+</approved_phase_1_plan>
+If the marker says the approved plan was not provided, STOP without creating anything and ask the user to provide it.
 
 # TASK
 Create the approved project skeleton inside ${d.root}.
@@ -451,7 +502,7 @@ ${d.struct2}
 End your response with exactly:
 ${d.end2}`,
 
-  p3: d => `# ROLE
+  p3: (d) => `# ROLE
 You are an independent project auditor, PHASE 3 of 3. Assume NOTHING from previous phases is correct — verify everything yourself by reading the actual files in ${d.root}.
 
 # EXPECTED CONTEXT (what the files should reflect)
@@ -485,7 +536,7 @@ ${d.struct3}
 End your response with exactly this question and then stop:
 ${d.q3}`,
 
-  p4: d => `# ROLE
+  p4: (d) => `# ROLE
 You are the ongoing project assistant for ${d.name}, running inside ${d.agent}. The project was bootstrapped earlier; your job is to re-establish context, reconcile the tracking files with reality, and propose the next steps.
 
 # PROJECT CONTEXT
@@ -519,11 +570,12 @@ ${d.struct4}
 
 # STOP RULE
 End your response with exactly this question and then stop:
-${d.q4}`
+${d.q4}`,
 };
 
-const T_TR = {
-  p1: d => `# ROL
+// Source: src/features/template-catalog/prompt-templates-tr.mjs
+const TR_PROMPT_TEMPLATES = {
+  p1: (d) => `# ROL
 Sen ${d.agent} içinde çalışan kıdemli bir yazılım mimarı ve proje bootstrap uzmanısın.
 
 # PROJE BAĞLAMI
@@ -562,7 +614,7 @@ Cevabını tam olarak şu soruyla bitir ve dur:
 ${d.q1}
 Kullanıcının açık onayını bekle. Kendi başına devam etme.`,
 
-  p2: d => `# ROL
+  p2: (d) => `# ROL
 Aynı mimar, 3 aşamanın 2.'si. Kullanıcı 1. aşamadaki bootstrap planını ONAYLADI.
 Kullanıcı planda değişiklik istediyse o değişiklikleri uygula; aksi halde onaylanan planı aynen izle.
 
@@ -575,7 +627,15 @@ Kullanıcı planda değişiklik istediyse o değişiklikleri uygula; aksi halde 
 - MVP hedefi: ${d.mvp}
 - Komutlar (build/test/çalıştır): ${d.commands}
 - Proje ölçeği: ${d.scaleLabel} (aşağıdaki çekirdek dosya/klasör seti bunu zaten yansıtıyor)
+- Bu ölçek için seçilen çekirdek dosyalar: ${d.coreFiles}
 - Ek notlar: ${d.notes}
+
+# ONAYLANAN 1. AŞAMA PLANI
+Aşağıdaki sınırlayıcılar arasında bulunan içerik, bu aşama için onaylanan plandır.
+<onaylanan_1_asama_plani>
+${d.approvedPlan}
+</onaylanan_1_asama_plani>
+İşaret, onaylanan planın verilmediğini söylüyorsa hiçbir şey oluşturmadan DUR ve kullanıcıdan planı iste.
 
 # GÖREV
 Onaylanan proje iskeletini ${d.root} içinde oluştur.
@@ -613,7 +673,7 @@ ${d.struct2}
 Cevabını tam olarak şu cümleyle bitir:
 ${d.end2}`,
 
-  p3: d => `# ROL
+  p3: (d) => `# ROL
 Bağımsız bir proje denetçisisin, 3 aşamanın 3.'sü. Önceki aşamalardan HİÇBİR ŞEYİN doğru olduğunu varsayma — ${d.root} içindeki gerçek dosyaları okuyarak her şeyi kendin doğrula.
 
 # BEKLENEN BAĞLAM (dosyaların yansıtması gerekenler)
@@ -647,7 +707,7 @@ ${d.struct3}
 Cevabını tam olarak şu soruyla bitir ve dur:
 ${d.q3}`,
 
-  p4: d => `# ROL
+  p4: (d) => `# ROL
 Sen ${d.name} projesinin süregelen proje asistanısın ve ${d.agent} içinde çalışıyorsun. Proje daha önce bootstrap edildi; görevin bağlamı yeniden kurmak, izleme dosyalarını gerçek durumla mutabık kılmak ve sıradaki adımları önermek.
 
 # PROJE BAĞLAMI
@@ -681,26 +741,122 @@ ${d.struct4}
 
 # DURMA KURALI
 Cevabını tam olarak şu soruyla bitir ve dur:
-${d.q4}`
+${d.q4}`,
 };
+
+// Source: src/features/prompt-generation/prompt-generator.mjs
+const valueOr = (value, fallback) => {
+  const normalized = (value || "").trim();
+  return normalized || fallback;
+};
+
+const codeRulesFor = (promptLanguage, codeAllowed) => {
+  if (promptLanguage === "en") {
+    return {
+      codeRule: codeAllowed
+        ? "Code writing IS allowed: create only a minimal entry point in src/, nothing more."
+        : "Code writing is NOT allowed: write NO application code; src/ contains only .gitkeep.",
+      scopeRule: codeAllowed
+        ? "Code writing was allowed: verify src/ contains only a minimal entry point, nothing more."
+        : "Code writing was NOT allowed: verify no application code exists in src/.",
+    };
+  }
+
+  return {
+    codeRule: codeAllowed
+      ? "Kod yazma İZNİ VAR: src/ içinde yalnızca minimal bir giriş noktası oluştur, fazlasını yazma."
+      : "Kod yazma izni YOK: hiçbir uygulama kodu yazma; src/ yalnızca .gitkeep içersin.",
+    scopeRule: codeAllowed
+      ? "Kod yazma izni VARDI: src/ içinde yalnızca minimal bir giriş noktası olduğunu doğrula."
+      : "Kod yazma izni YOKTU: src/ içinde hiçbir uygulama kodu bulunmadığını doğrula.",
+  };
+};
+
+const responseLanguageName = (promptLanguage, responseLanguage) => {
+  if (promptLanguage === "en") return responseLanguage === "tr" ? "Turkish" : "English";
+  return responseLanguage === "tr" ? "Türkçe" : "İngilizce";
+};
+
+const buildTemplateData = (profile, projectTypeLabel) => {
+  const promptLanguage = profile.promptLang;
+  const fallback = promptLanguage === "en" ? "(not specified)" : "(belirtilmedi)";
+  const responseContracts = RESPONSE_CONTRACTS[profile.respLang] || RESPONSE_CONTRACTS.en;
+  const codeRules = codeRulesFor(promptLanguage, profile.code);
+
+  return {
+    agent: profile.agent || "Claude Code",
+    approvedPlan: valueOr(
+      profile.approvedPlan,
+      promptLanguage === "en"
+        ? "[APPROVED PLAN NOT PROVIDED — STOP and ask the user to paste the approved Phase 1 plan.]"
+        : "[ONAYLANAN PLAN VERİLMEDİ — DUR ve kullanıcıdan onaylanan 1. aşama planını yapıştırmasını iste.]",
+    ),
+    code: promptLanguage === "en" ? (profile.code ? "yes" : "no") : profile.code ? "evet" : "hayır",
+    commands: valueOr(
+      profile.commands,
+      promptLanguage === "en"
+        ? "not provided — infer the build, test and run commands from the tech stack and project files"
+        : "verilmedi — build, test ve çalıştırma komutlarını teknolojiden ve proje dosyalarından çıkar",
+    ),
+    coreDirs: directoriesFor(profile.scale),
+    coreFiles: filesFor(profile.scale),
+    desc: valueOr(profile.desc, fallback),
+    dirPurposes: directoryPurposesFor(profile.scale, promptLanguage),
+    end2: responseContracts.p2end,
+    mvp: valueOr(profile.mvp, fallback),
+    name: valueOr(profile.name, fallback),
+    notes: valueOr(profile.notes, promptLanguage === "en" ? "None" : "Yok"),
+    q1: responseContracts.p1q,
+    q3: responseContracts.p3q,
+    q4: responseContracts.p4q,
+    resp: responseLanguageName(promptLanguage, profile.respLang),
+    root: valueOr(profile.root, fallback),
+    scaleLabel:
+      (SCALE_PROMPT_LABELS[promptLanguage] || SCALE_PROMPT_LABELS.en)[profile.scale] ||
+      (SCALE_PROMPT_LABELS[promptLanguage] || SCALE_PROMPT_LABELS.en).full,
+    struct1: responseContracts.p1struct,
+    struct2: responseContracts.p2struct,
+    struct3: responseContracts.p3struct,
+    struct4: responseContracts.p4struct,
+    tech: valueOr(profile.tech, fallback),
+    type: projectTypeLabel || fallback,
+    ...codeRules,
+  };
+};
+
+const generatePrompts = (profile, projectTypeLabel) => {
+  const templateData = buildTemplateData(profile, projectTypeLabel);
+  const templates = profile.promptLang === "en" ? EN_PROMPT_TEMPLATES : TR_PROMPT_TEMPLATES;
+
+  return [
+    templates.p1(templateData),
+    templates.p2(templateData),
+    templates.p3(templateData),
+    templates.p4(templateData),
+  ];
+};
+/* PROMPT_CORE_END */
 
 function defaults() {
   return {
     ui: { lang: "tr", theme: null },
-    f: { name: "", root: "", desc: "", type: "", tech: "", mvp: "", commands: "", scale: "full", agent: "Claude Code", promptLang: "en", respLang: "tr", notes: "", code: false }
+    f: { name: "", root: "", desc: "", type: "", tech: "", mvp: "", commands: "", approvedPlan: "", scale: "full", agent: "Claude Code", promptLang: "en", respLang: "tr", notes: "", code: false }
   };
 }
 
 let state;
 try {
   const raw = JSON.parse(localStorage.getItem(LS_KEY));
-  state = raw && raw.ui && raw.f ? raw : defaults();
+  const fallbackState = defaults();
+  state = raw && raw.ui && raw.f
+    ? { ui: { ...fallbackState.ui, ...raw.ui }, f: { ...fallbackState.f, ...raw.f } }
+    : fallbackState;
 } catch (e) { state = defaults(); }
 if (state.f.agent === "Agent") state.f.agent = "a coding agent";
 
 function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {} }
 
-const TIP_KEYS = ["name", "root", "desc", "type", "tech", "mvp", "commands", "scale", "agent", "promptLang", "respLang", "notes", "code"];
+const TIP_KEYS = ["name", "root", "desc", "type", "tech", "mvp", "commands", "approvedPlan", "scale", "agent", "promptLang", "respLang", "notes", "code"];
 const REQUIRED_IDS = ["f-name", "f-root", "f-desc", "f-type", "f-tech", "f-mvp"];
 
 function updateReqStyles() {
@@ -714,7 +870,7 @@ function updateReqStyles() {
 
 const FIELD_MAP = [
   ["f-name", "name"], ["f-root", "root"], ["f-desc", "desc"], ["f-tech", "tech"],
-  ["f-mvp", "mvp"], ["f-commands", "commands"], ["f-notes", "notes"]
+  ["f-mvp", "mvp"], ["f-commands", "commands"], ["f-approved-plan", "approvedPlan"], ["f-notes", "notes"]
 ];
 const SELECT_MAP = [["f-type", "type"], ["f-scale", "scale"], ["f-agent", "agent"], ["f-promptlang", "promptLang"], ["f-resplang", "respLang"]];
 
@@ -775,7 +931,7 @@ function applyLabels() {
   document.documentElement.lang = state.ui.lang;
   $("t-subtitle").textContent = L.subtitle;
   $("t-formTitle").textContent = L.formTitle;
-  ["name", "root", "desc", "type", "tech", "mvp", "commands", "scale", "agent", "promptLang", "respLang", "notes", "code"].forEach(k => {
+  ["name", "root", "desc", "type", "tech", "mvp", "commands", "approvedPlan", "scale", "agent", "promptLang", "respLang", "notes", "code"].forEach(k => {
     $("l-" + k).textContent = L[k];
   });
   $("t-autosave").textContent = L.autosave;
@@ -792,6 +948,7 @@ function applyLabels() {
   $("f-desc").placeholder = L.phDesc;
   $("f-notes").placeholder = L.phNotes;
   $("f-commands").placeholder = L.phCommands;
+  $("f-approved-plan").placeholder = L.phApprovedPlan;
   TIP_KEYS.forEach(k => {
     const el = $("tip-" + k);
     const tp = L.tips[k];
@@ -820,47 +977,8 @@ function renderPrompts() {
   const f = state.f;
   const PL = f.promptLang;
   const TP = I18N[PL];
-  const fb = PL === "en" ? "(not specified)" : "(belirtilmedi)";
-  const v = (x, alt) => { x = (x || "").trim(); return x || alt; };
-
-  const codeRule = PL === "en"
-    ? (f.code
-        ? "Code writing IS allowed: create only a minimal entry point in src/, nothing more."
-        : "Code writing is NOT allowed: write NO application code; src/ contains only .gitkeep.")
-    : (f.code
-        ? "Kod yazma İZNİ VAR: src/ içinde yalnızca minimal bir giriş noktası oluştur, fazlasını yazma."
-        : "Kod yazma izni YOK: hiçbir uygulama kodu yazma; src/ yalnızca .gitkeep içersin.");
-  const scopeRule = PL === "en"
-    ? (f.code
-        ? "Code writing was allowed: verify src/ contains only a minimal entry point, nothing more."
-        : "Code writing was NOT allowed: verify no application code exists in src/.")
-    : (f.code
-        ? "Kod yazma izni VARDI: src/ içinde yalnızca minimal bir giriş noktası olduğunu doğrula."
-        : "Kod yazma izni YOKTU: src/ içinde hiçbir uygulama kodu bulunmadığını doğrula.");
-
-  const d = {
-    name: v(f.name, fb), root: v(f.root, fb), desc: v(f.desc, fb),
-    type: f.type ? TP.typeNames[f.type] : fb,
-    tech: v(f.tech, fb), mvp: v(f.mvp, fb),
-    commands: v(f.commands, PL === "en" ? "not provided — infer the build, test and run commands from the tech stack and project files" : "verilmedi — build, test ve çalıştırma komutlarını teknolojiden ve proje dosyalarından çıkar"),
-    agent: f.agent || "Claude Code",
-    notes: v(f.notes, PL === "en" ? "None" : "Yok"),
-    code: PL === "en" ? (f.code ? "yes" : "no") : (f.code ? "evet" : "hayır"),
-    codeRule, scopeRule,
-    resp: PL === "en" ? (f.respLang === "tr" ? "Turkish" : "English") : (f.respLang === "tr" ? "Türkçe" : "İngilizce")
-  };
-  d.coreFiles = filesFor(f.scale);
-  d.coreDirs = dirsFor(f.scale);
-  d.dirPurposes = dirPurposesFor(f.scale, PL);
-  d.scaleLabel = (SCALE_PROMPT_LABEL[PL] || SCALE_PROMPT_LABEL.en)[f.scale] || (SCALE_PROMPT_LABEL[PL] || SCALE_PROMPT_LABEL.en).full;
-  const rs = RESP_STRINGS[f.respLang] || RESP_STRINGS.en;
-  d.struct1 = rs.p1struct; d.q1 = rs.p1q;
-  d.struct2 = rs.p2struct; d.end2 = rs.p2end;
-  d.struct3 = rs.p3struct; d.q3 = rs.p3q;
-  d.struct4 = rs.p4struct; d.q4 = rs.p4q;
-
-  const T = PL === "en" ? T_EN : T_TR;
-  prompts = [T.p1(d), T.p2(d), T.p3(d), T.p4(d)];
+  const projectTypeLabel = f.type ? TP.typeNames[f.type] : "";
+  prompts = generatePrompts(f, projectTypeLabel);
   const loc = state.ui.lang === "tr" ? "tr-TR" : "en-US";
   prompts.forEach((p, i) => {
     $("p-" + i).textContent = p;

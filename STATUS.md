@@ -2,10 +2,10 @@
 
 > Bu dosya projenin **güncel gidişatını** tek bakışta gösterir. Her oturuma başlarken önce bunu oku; iş bitince güncelle. Geçmiş için [CHANGELOG bölümü](#changelog), kararlar için aracın ürettiği DECISIONS mantığı geçerli.
 
-- **Güncel sürüm:** v0.6
-- **Son güncelleme:** 2026-07-08
-- **Durum:** Çalışır ve kullanıma hazır. Zorunlu iş yok.
-- **Aktif odak:** Gerçek projede saha testi bekleniyor.
+- **Güncel sürüm:** v0.7.0-alpha.1
+- **Son güncelleme:** 2026-07-27
+- **Durum:** v0.7.0-alpha.1 yayına alındı. Çekirdek modüllere ayrıldı. 28 test geçiyor ve iki Phase 2 bağlam açığı kapatıldı.
+- **Aktif odak:** Profil/şablon şemalarını sürümlemek ve zorunlu alanlar için gerçek kullanım kapısı eklemek.
 
 ## Şu an ne durumdayız
 
@@ -13,10 +13,10 @@ Tek dosyalık local HTML prompt üreticisi (`index.html`). Form doldurulur; Clau
 
 ## Sıradaki adımlar
 
-1. **Saha testi (öncelik):** aracı gerçek bir projede (VisionVp vb.) kullan; özellikle *dolu klasöre bootstrap* senaryosu ("üzerine yazma, atla, raporla") hiç denenmedi.
-2. EARS formatı opsiyonu (REQUIREMENTS.md için) — belirsizliği kaldıran test edilebilir gereksinim kalıbı.
-3. Cursor için `.cursor/rules/*.mdc` eşlemesi.
-4. Form profilleri + JSON dışa/içe aktarma.
+1. **Şema sürümü:** profil ve prompt şablonlarına açık sürüm kimliği ekle; eski localStorage kayıtlarının taşınmasını test et.
+2. **Doğrulama kapısı:** zorunlu alanlar eksikken ilgili promptların kopyalanmasını engelle.
+3. **Saha testi:** aracı en az üç gerçek projede kullan; özellikle dolu klasöre bootstrap senaryosunu doğrula.
+4. Ayrıntılı iş sırası için `TASKS.md`, kalite kapısı için `EVALUATION.md` dosyasını izle.
 
 ## Yakın geçmiş (changelog özeti)
 
