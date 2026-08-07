@@ -76,6 +76,7 @@ ${d.rootGuard}
 2. Her çekirdek dosyayı proje bağlamından türetilmiş GERÇEK başlangıç içeriğiyle, ${d.resp} dilinde oluştur. Yasak: boş dosyalar, yalnızca "TODO" içeren dosyalar, çözülmemiş placeholder'lar.
 3. Dosya başına asgari içerik (yalnızca bu projenin ölçeğine dahil dosyalar için — yukarıdaki çekirdek sette olmayan dosyaları yok say):
    - README.md        → projenin ne olduğu, MVP hedefi, depo düzeni, doküman bağlantıları
+   - STATUS.md        → tek bakışta güncel durum: sürüm, son güncelleme tarihi, aktif odak, sıradaki 1-3 adım, bilinen blocker'lar. Bu, devam girişidir — kısa ve güncel tut.
    - PROJECT_BRIEF.md → hedef, hedef kullanıcı, MVP tanımı, açıkça kapsam dışı maddeler
    - REQUIREMENTS.md  → bağlamdan türetilen işlevsel + işlevsel olmayan MVP gereksinimleri
    - DESIGN.md        → başlangıç mimarisi: bileşenler, veri akışı, temel kısıtlar
@@ -157,7 +158,7 @@ ${d.trustNote}
 
 # GÖREV
 ${d.root} içinde çalış.
-1. İzleme dosyalarını şu sırayla oku (olmayanları atla): README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md.
+1. İzleme dosyalarını şu sırayla oku (olmayanları atla): STATUS.md, README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md. STATUS.md'yi en hızlı yönlenme aracın say, ama gerçekle doğrula — eski kalmış olabilir.
 2. Projenin gerçek durumunu incele: src/, tests/ ve diğer klasörlerin içeriği; depo varsa git geçmişi.
 3. TASKS.md'yi gerçeklikle mutabık kıl:
    - yapılmış ama işaretlenmemiş görevler,
@@ -165,7 +166,7 @@ ${d.root} içinde çalış.
    - projede var olan ama hiçbir göreve bağlı olmayan işler,
    - artık geçersiz görevler.
 4. CHANGELOG.md bulduğun işleri yansıtıyor mu kontrol et; eksik kayıtları not et.
-5. TASKS.md ve CHANGELOG.md için birebir düzenlemeler içeren bir güncelleme önerisi hazırla (yalnızca açıkça gerekiyorsa DECISIONS.md veya LESSONS.md da eklenebilir). Başka hiçbir dosyada değişiklik önerme.
+5. STATUS.md (güncel gerçeği yansıtacak şekilde tazele), TASKS.md ve CHANGELOG.md için birebir düzenlemeler içeren bir güncelleme önerisi hazırla (yalnızca açıkça gerekiyorsa DECISIONS.md veya LESSONS.md da eklenebilir). Başka hiçbir dosyada değişiklik önerme.
 6. MVP hedefine — MVP bittiyse yol haritasındaki sonraki maddeye — giden en mantıklı 1-3 adımı öner.
 
 # ÇIKTI

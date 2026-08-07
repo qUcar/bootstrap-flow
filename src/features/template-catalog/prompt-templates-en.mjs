@@ -76,6 +76,7 @@ ${d.rootGuard}
 2. Create every core file with REAL initial content derived from the project context, written in ${d.resp}. Forbidden: empty files, files containing only "TODO", unresolved placeholders.
 3. Minimum content per file (only for files included in this project's scale — ignore any listed file that is not in the core set above):
    - README.md        → what the project is, MVP goal, how the repo is organized, doc links
+   - STATUS.md        → single-glance current state: version, last-updated date, active focus, next 1-3 steps, known blockers. This is the resume entry point — keep it short and current.
    - PROJECT_BRIEF.md → goal, target user, MVP definition, explicitly out-of-scope items
    - REQUIREMENTS.md  → functional + non-functional MVP requirements from the context
    - DESIGN.md        → initial architecture: components, data flow, key constraints
@@ -157,7 +158,7 @@ Analyze first — do NOT modify anything until the user approves your proposal a
 
 # TASK
 Work inside ${d.root}.
-1. Read the tracking files in this order (skip any that do not exist): README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md.
+1. Read the tracking files in this order (skip any that do not exist): STATUS.md, README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md. Treat STATUS.md as your fastest orientation, but verify it against reality — it may be stale.
 2. Inspect the actual state of the project: contents of src/, tests/ and the other folders, and the git history if a repository exists.
 3. Reconcile TASKS.md against reality:
    - tasks that are done but not checked off,
@@ -165,7 +166,7 @@ Work inside ${d.root}.
    - work present in the project that no task covers,
    - tasks that have become obsolete.
 4. Check whether CHANGELOG.md reflects the work you found; note missing entries.
-5. Prepare an update proposal with the exact edits for TASKS.md and CHANGELOG.md (plus DECISIONS.md or LESSONS.md only if something clearly belongs there). Do not propose changes to any other file.
+5. Prepare an update proposal with the exact edits for STATUS.md (refresh it to match the current reality), TASKS.md and CHANGELOG.md (plus DECISIONS.md or LESSONS.md only if something clearly belongs there). Do not propose changes to any other file.
 6. Propose the 1-3 most logical next steps toward the MVP goal — or, if the MVP is done, toward the next roadmap item.
 
 # OUTPUT

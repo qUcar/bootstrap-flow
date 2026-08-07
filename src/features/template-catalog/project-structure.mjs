@@ -2,6 +2,7 @@ const SCALE_LEVEL = { quick: 1, standard: 2, full: 3 };
 
 const CORE_FILE_DEFINITIONS = [
   ["README.md", 1],
+  ["STATUS.md", 2],
   ["PROJECT_BRIEF.md", 2],
   ["REQUIREMENTS.md", 2],
   ["DESIGN.md", 2],

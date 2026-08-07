@@ -28,10 +28,10 @@ const baselineProfile = {
 };
 
 const baselineDigests = [
-  "28373c3544bc553d1d37de95e9f8acb8ea8385a49adee3f32b1e24c7796c0687",
-  "40c13a704059dae4bfcb994a8a556cc7a8e949741ec269aaddab358f3a0382e5",
-  "911a4d5d87835db02a308deab39dd12ed3f8ed89fc0e80fdbd4aacbdd07f23e5",
-  "e7c13e1780aa59d972e1ee5944e95900cbd8c1247865171092462e1b4a1b2bb3",
+  "6cbb34b9f106f8d47090f4e88bcd212a15b367e51945399a5a21e3abd0895ff9",
+  "06c0bb5a59ff6422ec3de6c23dbc31441e0f6d81e6b8ad88c263c3385bbdb0e4",
+  "e3523cba71358d93a6f7250a2e869daedbdea28a044a4ce5252048411f0152dd",
+  "322b67723d1b89cc56da5beca7c20000c5f22d9c84b69c039c515dbbf01c30b9",
 ];
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
@@ -51,6 +51,7 @@ const scaleFiles = {
   quick: ["README.md", "CLAUDE.md", "AGENTS.md", "CODEX.md", "TASKS.md", "CHANGELOG.md", ".gitignore"],
   standard: [
     "README.md",
+    "STATUS.md",
     "PROJECT_BRIEF.md",
     "REQUIREMENTS.md",
     "DESIGN.md",
@@ -65,6 +66,7 @@ const scaleFiles = {
   ],
   full: [
     "README.md",
+    "STATUS.md",
     "PROJECT_BRIEF.md",
     "REQUIREMENTS.md",
     "DESIGN.md",
@@ -118,6 +120,26 @@ for (const scale of Object.keys(scaleFiles)) {
     }
   }
 }
+
+test("STATUS.md is in the core set for standard+full but not quick", () => {
+  const coreLine = (prompt) => prompt.match(/Core files selected for this scale: (.+)/)[1];
+  const quick = generatePrompts({ ...baselineProfile, scale: "quick" }, "Software automation");
+  const standard = generatePrompts({ ...baselineProfile, scale: "standard" }, "Software automation");
+  const full = generatePrompts({ ...baselineProfile, scale: "full" }, "Software automation");
+  assert.ok(!coreLine(quick[1]).includes("STATUS.md"));
+  assert.ok(coreLine(standard[1]).includes("STATUS.md"));
+  assert.ok(coreLine(full[1]).includes("STATUS.md"));
+});
+
+test("resume prompt reads STATUS.md first and proposes refreshing it (STATUS wiring)", () => {
+  const en = generatePrompts(baselineProfile, "Software automation");
+  assert.match(en[3], /this order[^\n]*STATUS\.md, README\.md/);
+  assert.match(en[3], /exact edits for STATUS\.md/);
+
+  const tr = generatePrompts({ ...baselineProfile, promptLang: "tr", respLang: "tr" }, "Yazılım otomasyonu");
+  assert.match(tr[3], /şu sırayla oku[^\n]*STATUS\.md, README\.md/);
+  assert.match(tr[3], /STATUS\.md \(güncel gerçeği yansıtacak/);
+});
 
 test("bootstrap prompt carries the approved Phase 1 plan", () => {
   const prompts = generatePrompts(baselineProfile, "Software automation");
