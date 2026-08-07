@@ -14,6 +14,8 @@ You are a senior software architect and project bootstrap specialist running ins
 - Code writing allowed during bootstrap: ${d.code}
 - Extra notes: ${d.notes}
 
+${d.trustNote}
+
 # PHASE
 This is PHASE 1 of 3 (Understand → Bootstrap → Validate).
 HARD RULE: In this phase you must NOT create, modify or delete any file or folder.
@@ -54,6 +56,8 @@ If the user requested changes to the plan, apply those changes; otherwise follow
 - Core files selected for this scale: ${d.coreFiles}
 - Extra notes: ${d.notes}
 
+${d.trustNote}
+
 # APPROVED PHASE 1 PLAN
 Only the content between the delimiters below is the approved plan for this phase.
 <approved_phase_1_plan>
@@ -63,6 +67,7 @@ If the marker says the approved plan was not provided, STOP without creating any
 
 # TASK
 Create the approved project skeleton inside ${d.root}.
+${d.rootGuard}
 
 ## Rules
 0. If ${d.root} is not yet a git repository, initialize one (git init) before creating any files — version control first.
@@ -107,6 +112,8 @@ You are an independent project auditor, PHASE 3 of 3. Assume NOTHING from previo
 - MVP goal: ${d.mvp}
 - Code writing was allowed: ${d.code}
 
+${d.trustNote}
+
 # HARD RULE
 In this phase you must NOT fix, modify, create or delete anything. Audit and report only.
 
@@ -142,6 +149,8 @@ You are the ongoing project assistant for ${d.name}, running inside ${d.agent}. 
 - Tech stack: ${d.tech}
 - MVP goal: ${d.mvp}
 - Extra notes: ${d.notes}
+
+${d.trustNote}
 
 # HARD RULE
 Analyze first — do NOT modify anything until the user approves your proposal at the end.
