@@ -31,7 +31,7 @@ const baselineDigests = [
   "6cbb34b9f106f8d47090f4e88bcd212a15b367e51945399a5a21e3abd0895ff9",
   "06c0bb5a59ff6422ec3de6c23dbc31441e0f6d81e6b8ad88c263c3385bbdb0e4",
   "e3523cba71358d93a6f7250a2e869daedbdea28a044a4ce5252048411f0152dd",
-  "322b67723d1b89cc56da5beca7c20000c5f22d9c84b69c039c515dbbf01c30b9",
+  "f347998224f06b4c3c355ea6d7546ade4feed3e6951ac7e8d126748c57440325",
 ];
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");

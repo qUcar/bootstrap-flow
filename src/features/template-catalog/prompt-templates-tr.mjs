@@ -159,7 +159,12 @@ ${d.trustNote}
 # GÖREV
 ${d.root} içinde çalış.
 1. İzleme dosyalarını şu sırayla oku (olmayanları atla): STATUS.md, README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md. STATUS.md'yi en hızlı yönlenme aracın say, ama gerçekle doğrula — eski kalmış olabilir.
-2. Projenin gerçek durumunu incele: src/, tests/ ve diğer klasörlerin içeriği; depo varsa git geçmişi.
+2. Projenin gerçek durumunu incele: src/, tests/ ve diğer klasörlerin içeriği.
+   Bir git deposuysa belgeler yerine git'i esas al — dosyalar eskimiş olabilir, geçmiş olamaz. En az şunları çalıştır:
+   - \`git log --oneline -20\` — gerçekte ne commit'lendi ve iş en son ne zaman durdu
+   - \`git status --short\` — commit'lenmemiş, yarım kalan iş; önceki oturum genellikle tam burada kesilmiştir
+   - \`git diff\` ve \`git diff --staged\` — o yarım kalan işin içeriği
+   Belgelerle git arasındaki her çelişkide, aksi kanıtlanana kadar belgeleri hatalı kabul et.
 3. TASKS.md'yi gerçeklikle mutabık kıl:
    - yapılmış ama işaretlenmemiş görevler,
    - işaretli ama gerçekle örtüşmeyen görevler,

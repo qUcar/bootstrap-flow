@@ -3,8 +3,8 @@
 > Bu dosya projenin **güncel gidişatını** tek bakışta gösterir. Her oturuma başlarken önce bunu oku; iş bitince güncelle. Geçmiş için [CHANGELOG bölümü](#changelog), kararlar için aracın ürettiği DECISIONS mantığı geçerli.
 
 - **Güncel sürüm:** v0.7.0-alpha.1
-- **Son güncelleme:** 2026-07-27
-- **Durum:** v0.7.0-alpha.1 yayına alındı. Çekirdek modüllere ayrıldı. 28 test geçiyor ve iki Phase 2 bağlam açığı kapatıldı.
+- **Son güncelleme:** 2026-08-11
+- **Durum:** Saha testi (10 senaryo) koşuldu; iki güvenlik açığı kapatıldı (eksik kök klasör koruması + güvenilmez girdi çitlenmesi). STATUS.md üretilen sete eklendi. Faz 4 git adımları somut komutlara çevrildi. 33 test geçiyor.
 - **Aktif odak:** Profil/şablon şemalarını sürümlemek ve zorunlu alanlar için gerçek kullanım kapısı eklemek.
 
 ## Şu an ne durumdayız
@@ -20,8 +20,9 @@ Tek dosyalık local HTML prompt üreticisi (`index.html`). Form doldurulur; Clau
 
 ## Yakın geçmiş (changelog özeti)
 
-- **v0.6** — Proje ölçeği seçici (Hızlı 7 / Standart 12 / Tam 14 dosya; her kademe alttakini kapsar). Tutarlılık ve doğrulama kuralları ölçek-güvenli.
-- **v0.5** — AGENTS.md kalite paketi: opsiyonel komut alanı → AGENTS.md'ye build/test/run komutları; AGENTS.md açık standardına hizalandı ve "ince tut, referans ver" kuralı; Bootstrap'a `git init` 0. adımı. STATUS.md eklendi.
+- **v0.7.0-alpha.1 (devam)** — Güvenlik sertleştirmesi (bağlam güven sınırı + eksik kök klasör koruması). STATUS.md üretilen sete eklendi (Standart+Tam). Faz 4 git adımları somut komutlara çevrildi (`git log`/`status`/`diff`; çelişkide belge değil git esas). 28 → 33 test.
+- **v0.6** — Proje ölçeği seçici (Hızlı 7 / Standart 13 / Tam 15 dosya; her kademe alttakini kapsar). Tutarlılık ve doğrulama kuralları ölçek-güvenli.
+- **v0.5** — AGENTS.md kalite paketi: opsiyonel komut alanı → AGENTS.md'ye build/test/run komutları; AGENTS.md açık standardına hizalandı ve "ince tut, referans ver" kuralı; Bootstrap'a `git init` 0. adımı. STATUS.md (kendi reposuna) eklendi.
 - **v0.4** — 4. prompt "Devam / Güncelle" (sonraki oturumlarda proje durumunu mutabık kılar).
 - **v0.3** — Zorunlu alan kırmızı/yeşil çerçeveleri + "i" bilgi balonları.
 - **v0.2** — Dogfooding düzeltmeleri (cevap diline duyarlı yapı, tutarlılık şartı, denetim istisnaları).

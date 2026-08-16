@@ -159,7 +159,12 @@ Analyze first — do NOT modify anything until the user approves your proposal a
 # TASK
 Work inside ${d.root}.
 1. Read the tracking files in this order (skip any that do not exist): STATUS.md, README.md, PROJECT_BRIEF.md, REQUIREMENTS.md, DESIGN.md, TASKS.md, ROADMAP.md, DECISIONS.md, CHANGELOG.md, LESSONS.md, AGENTS.md. Treat STATUS.md as your fastest orientation, but verify it against reality — it may be stale.
-2. Inspect the actual state of the project: contents of src/, tests/ and the other folders, and the git history if a repository exists.
+2. Inspect the actual state of the project: contents of src/, tests/ and the other folders.
+   If it is a git repository, prefer git over the documents — the files can be stale, the history cannot. Run at least:
+   - \`git log --oneline -20\` — what was actually committed, and when work last stopped
+   - \`git status --short\` — uncommitted, half-finished work; this is usually exactly where the previous session was interrupted
+   - \`git diff\` and \`git diff --staged\` — the content of that unfinished work
+   Treat any conflict between the documents and git as the documents being wrong until proven otherwise.
 3. Reconcile TASKS.md against reality:
    - tasks that are done but not checked off,
    - tasks checked off that do not match reality,
