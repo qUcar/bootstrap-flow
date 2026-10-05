@@ -1,6 +1,6 @@
 # Bootstrap Flow
 
-[![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
+**Version 2.0.0**
 
 Türkçe: [README.tr.md](README.tr.md)
 
@@ -24,9 +24,19 @@ This tool is a standalone HTML file that takes your project requirements via a f
 
 ## Features
 
-- **Project Scales**: Choose between Quick (7 files), Standard (12 files), and Full (14 files) to match your project's complexity.
+- **Project Scales**: Choose between Quick (7 files), Standard (13 files), and Full (15 files) to match your project's complexity.
 - **Bilingual Support**: Generates prompts in English or Turkish, with independent settings for the UI language and agent response language.
 - **Privacy First**: Completely offline. All form data is stored locally in your browser's `localStorage`. No telemetry or backend.
+
+## Version 2
+
+- Required fields block copying; Bootstrap also requires the approved Phase 1 plan.
+- Create, switch and delete local projects (up to 100). The project name is the selector label.
+- Download the selected profile as JSON or import a supported JSON file as a new project (maximum 2 MB). Incomplete drafts can be exported.
+- Legacy v1 local data migrates on the next successful save; the original key remains intact. Invalid or future-version data is preserved until explicit recovery.
+- Save failures remain visible until a successful retry. Export unsaved profiles before closing the page.
+- Profiles are per browser/origin; use JSON when moving between the local HTML and GitHub Pages. JSON may include sensitive project text; review it before sharing.
+- The generator cannot enforce an external agent's filesystem actions. Review the resolved target, existing files, agent report and Git diff. Checks without evidence must not be reported as passed.
 
 ## Local Usage
 

@@ -48,3 +48,10 @@
 - **Karar:** Prompt üretim çekirdeği ESM kaynak modüllerinde tutulacak; sıfır bağımlılıklı Node build adımı bu modülleri kök `index.html` içindeki işaretli bölgeye gömecek.
 - **Gerekçe:** İş mantığını DOM'dan bağımsız test etmek ve son kullanıcının tek dosyalık çevrimdışı deneyimini aynı anda korumak gerekir.
 - **Sonuç:** Kaynak modülleri doğruluk kaynağıdır. `index.html` içindeki prompt çekirdeği elle düzenlenmez; `npm run build` ile üretilir ve `npm run build:check` ile güncelliği doğrulanır.
+
+## ADR-008 — v2 yerel profil ve doğrulama sözleşmesi
+
+- **Durum:** Kabul edildi (2026-10-05)
+- **Karar:** Sıfır bağımlılıklı doğrulama, profil ve saklama şeması v2 ile sürümlenir; profil mantığı DOM'dan bağımsızdır. JSON mevcut veriyi değiştirmek yerine yeni proje ekler. Her zorunlu alanda kopyalama, Bootstrap'ta ayrıca plan kapısı uygulanır.
+- **Gerekçe:** Tek HTML ve çevrimdışı sözleşmesi korunurken eski verinin kaybolması, bozuk veriyle çökme ve eksik prompt kullanımı önlenmelidir. Bu küçük sabit şema için ek üretim bağımlılığı gerekmez.
+- **Sonuç:** v1 anahtarı saklanır; bozuk kayıt açık kurtarma seçimine kadar ezilmez. Harici agent denetimi bir güvenlik garantisi değildir; kanıt isteme ve kullanıcı incelemesiyle sınır açıkça belirtilir. UI profil kontrolleri src/ui altında geliştirilir ve mevcut build bölgesine gömülür.

@@ -1,36 +1,19 @@
-## Highlights
+# Bootstrap Flow v2.0.0
 
-- Offline, single-file application
-- No embedded LLM or LLM API
-- Four-phase project bootstrap workflow
-- Turkish and English UI
-- Turkish and English prompt generation
-- Quick, Standard, and Full project scales
-- DOM-independent prompt generation core
-- Approved Phase 1 plan transfer into Phase 2
-- Safe stop behavior when the approved plan is missing
-- Safe stop behavior when the target root folder is missing
-- Untrusted-input fencing: context values are marked as data, not instructions, in every phase
-- Automated prompt matrix testing
-- GitHub Pages live demo
+## Changes
 
-## Validation
+- Required-field copy gates and an approved-plan gate for Bootstrap.
+- Visible save/copy failures, save retry and manual copy guidance.
+- Versioned v2 profile storage with validated v1 migration; corrupt data is preserved until explicit recovery.
+- Up to 100 local projects with JSON import/export, strict schema validation and a 2 MB import limit.
+- Versioned bilingual prompts; approved plans carry into validation.
+- Explicit external-agent trust boundary and evidence-based filesystem verification instructions.
+- Offline single-HTML delivery, no backend, no LLM calls and no production dependencies.
 
-- Verified build check passed successfully.
-- Verified syntax checks passed successfully.
-- 31 unit/integration tests passed locally.
-- CI pipeline failed to start on GitHub due to an account billing issue.
+## Usage
 
-## Alpha limitations
+Download index.html and open it in your browser, or use the GitHub Pages demo. Existing local profiles migrate on the next successful save. JSON exports may contain sensitive project text; review before sharing.
 
-- Alpha status with limited real-world field testing.
-- Profile import/export and multi-profile support are incomplete.
-- Ongoing accessibility verification.
-- Coding-agent output still requires user review.
+## Validation and limitations
 
-## Links
-
-- Repository: https://github.com/qUcar/bootstrap-flow
-- Live Demo: https://qucar.github.io/bootstrap-flow/
-- [English README](https://github.com/qUcar/bootstrap-flow/blob/main/README.md)
-- [Turkish README](https://github.com/qUcar/bootstrap-flow/blob/main/README.tr.md)
+Build, syntax checks and all 48 tests passed locally. Browser smoke checks covered copy gates, copying, project switching, reload persistence, JSON import and 375/768/1280/1440 px layouts. The in-app browser did not report JSON download completion; direct file opening and full cross-browser/accessibility verification remain unverified. See VALIDATION.md for exact checks. External agent actions still require review; this application cannot enforce filesystem permissions or guarantee preservation.

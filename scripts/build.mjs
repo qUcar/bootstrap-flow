@@ -8,11 +8,15 @@ const coreStart = "/* PROMPT_CORE_START */";
 const coreEnd = "/* PROMPT_CORE_END */";
 
 const sourcePaths = [
+  "src/features/project-profile/profile-schema.mjs",
+  "src/features/project-profile/profile-store.mjs",
+  "src/features/preferences/clipboard.mjs",
   "src/features/template-catalog/project-structure.mjs",
   "src/features/template-catalog/response-contracts.mjs",
   "src/features/template-catalog/prompt-templates-en.mjs",
   "src/features/template-catalog/prompt-templates-tr.mjs",
   "src/features/prompt-generation/prompt-generator.mjs",
+  "src/ui/profile-controls.mjs",
 ];
 
 const removeModuleSyntax = (source) =>

@@ -1,8 +1,8 @@
-# Bootstrap Flow — Prompt Üretici
+# Bootstrap Flow v2 — Prompt Üretici
 
 English: [README.md](README.md)
 
-Yerel, tek dosyalık HTML aracı. Proje bilgilerini formdan alır ve Claude Code, Fable, Codex, Cursor gibi agent'lara verilecek 3 aşamalı "Project Bootstrap Flow" promptları üretir.
+Yerel, tek dosyalık HTML aracı. Proje bilgilerini formdan alır ve Claude Code, Fable, Codex, Cursor gibi agent'lara verilecek 3 başlangıç aşaması ve devam akışından oluşan "Project Bootstrap Flow" promptları üretir.
 
 **Bu araç dosya veya klasör oluşturmaz.** Dosya üretimini, promptları verdiğiniz agent yapar.
 
@@ -31,6 +31,16 @@ Projeye sonraki oturumlarda dönerken 4. promptu kullanın:
 - Proje tipi seçilince teknoloji ve MVP alanlarında örnek ipuçları görünür
 - Karakter sayacı ve tek tık kopyalama
 - Veriler yalnızca tarayıcının localStorage'ında tutulur; hiçbir yere gönderilmez
+
+## v2 yenilikleri
+
+- Zorunlu alanlar eksikken kopyalama kapalıdır. Bootstrap ayrıca onaylanan planı ister.
+- En fazla 100 yerel proje oluşturulur, değiştirilir ve silinir. Seçici etiketi proje adıdır.
+- Seçili profil JSON olarak indirilir; desteklenen JSON dosyası yeni proje olarak yüklenir (en fazla 2 MB). Eksik taslaklar da yedeklenebilir.
+- Eski v1 kayıtları ilk başarılı kayıtta v2'ye taşınır; eski anahtar korunur. Bozuk ve gelecek sürüm kayıtlar açık kurtarma onayına kadar ezilmez.
+- Kayıt hatasında JSON yedeği alın ve yeniden deneyin; başarısız değişiklikler sayfa kapanınca kaybolabilir.
+- Yerel HTML ve GitHub Pages farklı depolar kullanabilir. Profilinizi JSON ile taşıyın; paylaşmadan önce hassas bilgileri çıkarın.
+- Araç dış agent'ın dosya işlemlerini uygulamalı olarak denetleyemez. Hedef yolu, mevcut dosyaları, agent raporunu ve Git diff çıktısını inceleyin. Kanıtsız kontroller başarılı sayılmamalıdır.
 
 ## Projenin geliştirilmesi
 

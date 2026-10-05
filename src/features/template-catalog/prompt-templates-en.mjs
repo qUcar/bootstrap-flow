@@ -70,7 +70,7 @@ Create the approved project skeleton inside ${d.root}.
 ${d.rootGuard}
 
 ## Rules
-0. If ${d.root} is not yet a git repository, initialize one (git init) before creating any files — version control first.
+0. If ${d.root} is not already inside a git repository, initialize one (git init) before creating any files — version control first. If it already sits inside one (for example as a subfolder of a parent repository), do NOT run git init — never create a nested repository.
 1. Create the core folders first: ${d.coreDirs}. Put a .gitkeep file in every folder that would otherwise be empty.
    Folder purposes: ${d.dirPurposes}. Document these purposes in README.md's repo layout section.
 2. Create every core file with REAL initial content derived from the project context, written in ${d.resp}. Forbidden: empty files, files containing only "TODO", unresolved placeholders.

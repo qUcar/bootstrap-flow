@@ -28,10 +28,10 @@ const baselineProfile = {
 };
 
 const baselineDigests = [
-  "6cbb34b9f106f8d47090f4e88bcd212a15b367e51945399a5a21e3abd0895ff9",
-  "06c0bb5a59ff6422ec3de6c23dbc31441e0f6d81e6b8ad88c263c3385bbdb0e4",
-  "e3523cba71358d93a6f7250a2e869daedbdea28a044a4ce5252048411f0152dd",
-  "f347998224f06b4c3c355ea6d7546ade4feed3e6951ac7e8d126748c57440325",
+  "450f6070782dc7021ceea1c9956b716a7c89e2bbb218133504a776cc0b575976",
+  "5997228509a1b2260b674c4448b1017ea17209494860dc08b195c8d29cff9d4f",
+  "b9a257cb57c482974ca41a95a73a149518be3c302c50145176703a716c656131",
+  "3a014bd05d6bb4e800774ea19ab4c41dc8a7e8a3c0a7926d90fdcdae72d2282e"
 ];
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
@@ -45,6 +45,20 @@ test("prompt generation is deterministic", () => {
   const first = Array.from(application.generate(baselineProfile, { lang: "tr" }));
   const second = Array.from(application.generate(baselineProfile, { lang: "tr" }));
   assert.deepEqual(first, second);
+});
+
+test("v2 prompts expose their version and require evidence for file preservation", () => {
+  const en = generatePrompts(baselineProfile, "Software automation");
+  en.forEach(prompt => assert.match(prompt, /Template 2\.0\.0/));
+  assert.match(en[1], /symlinks/);
+  assert.match(en[1], /Never overwrite existing non-empty files/);
+  assert.match(en[2], /NOT VERIFIED/);
+  assert.match(en[2], /NOT RUN/);
+  assert.ok(en[2].includes(JSON.stringify(baselineProfile.approvedPlan)));
+  const tr = generatePrompts({ ...baselineProfile, promptLang: "tr" }, "Otomasyon");
+  tr.forEach(prompt => assert.match(prompt, /Şablon 2\.0\.0/));
+  assert.match(tr[2], /DOĞRULANAMADI/);
+  assert.match(tr[2], /ÇALIŞTIRILAMADI/);
 });
 
 const scaleFiles = {
@@ -103,7 +117,7 @@ for (const scale of Object.keys(scaleFiles)) {
             assert.doesNotMatch(prompt, /\$\{[^}]+\}/);
           });
 
-          assert.match(prompts[0], promptLang === "en" ? /^# ROLE/ : /^# ROL/);
+          assert.match(prompts[0], promptLang === "en" ? /^# ROLE/m : /^# ROL/m);
           assert.match(prompts[0], respLang === "en" ? /1\. Understanding/ : /1\. Anlayış/);
 
           const expectedFiles = scaleFiles[scale].join(", ");
@@ -120,6 +134,18 @@ for (const scale of Object.keys(scaleFiles)) {
     }
   }
 }
+
+// Found by a dogfood run: the target folder was a subfolder of an existing repository,
+// where a literal "not yet a git repository" reading would create a nested repo.
+test("bootstrap prompt does not order git init inside an existing repository", () => {
+  const en = generatePrompts(baselineProfile, "Software automation");
+  assert.match(en[1], /not already inside a git repository/);
+  assert.match(en[1], /never create a nested repository/);
+
+  const tr = generatePrompts({ ...baselineProfile, promptLang: "tr" }, "Yazılım otomasyonu");
+  assert.match(tr[1], /zaten bir git deposunun içinde değilse/);
+  assert.match(tr[1], /asla iç içe depo oluşturma/);
+});
 
 test("STATUS.md is in the core set for standard+full but not quick", () => {
   const coreLine = (prompt) => prompt.match(/Core files selected for this scale: (.+)/)[1];

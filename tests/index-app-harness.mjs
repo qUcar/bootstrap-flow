@@ -17,7 +17,9 @@ const createClassList = () => {
 };
 
 const createElement = () => ({
-  addEventListener: () => {},
+  listeners: {},
+  addEventListener(name, handler) { this.listeners[name] = handler; },
+  async dispatch(name, extra = {}) { return this.listeners[name]?.({ target: this, ...extra }); },
   appendChild: () => {},
   checked: false,
   classList: createClassList(),
@@ -82,6 +84,11 @@ const extractApplicationScript = (html) => {
 
 const TEST_API = `
 globalThis.__BOOTSTRAP_FLOW_TEST_API__ = {
+  state: () => JSON.parse(JSON.stringify(state)),
+  store: () => JSON.parse(JSON.stringify(profileStore)),
+  save: () => save(),
+  addProfile: (profile) => addProfile(profile),
+  activateProfile: (id) => activateProfile(id),
   generate(profile, ui = {}) {
     state = {
       ui: { ...defaults().ui, ...ui },
@@ -94,7 +101,7 @@ globalThis.__BOOTSTRAP_FLOW_TEST_API__ = {
   },
 };`;
 
-export const loadIndexApplication = async (indexPath) => {
+export const loadIndexApplication = async (indexPath, overrides = {}) => {
   const html = await readFile(indexPath, "utf8");
   const document = createDocument();
   const storage = new Map();
@@ -109,6 +116,7 @@ export const loadIndexApplication = async (indexPath) => {
     navigator: { clipboard: { writeText: async () => {} } },
     setTimeout: () => 0,
     window: { matchMedia: () => ({ matches: false }) },
+    ...overrides,
   };
 
   vm.createContext(sandbox);
@@ -116,5 +124,5 @@ export const loadIndexApplication = async (indexPath) => {
     filename: indexPath,
   });
 
-  return sandbox.__BOOTSTRAP_FLOW_TEST_API__;
+  return { ...sandbox.__BOOTSTRAP_FLOW_TEST_API__, document, storage };
 };

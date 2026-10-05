@@ -70,7 +70,7 @@ Onaylanan proje iskeletini ${d.root} içinde oluştur.
 ${d.rootGuard}
 
 ## Kurallar
-0. ${d.root} henüz bir git deposu değilse, dosyaları oluşturmadan önce bir git deposu başlat (git init) — önce sürüm kontrolü.
+0. ${d.root} zaten bir git deposunun içinde değilse, dosyaları oluşturmadan önce bir git deposu başlat (git init) — önce sürüm kontrolü. Zaten bir deponun içindeyse (örneğin üst klasördeki bir deponun alt klasörü olarak), git init çalıştırma — asla iç içe depo oluşturma.
 1. Önce çekirdek klasörleri oluştur: ${d.coreDirs}. Aksi halde boş kalacak her klasöre bir .gitkeep dosyası koy.
    Klasör amaçları: ${d.dirPurposes}. Bu amaçları README.md'nin depo düzeni bölümünde belgele.
 2. Her çekirdek dosyayı proje bağlamından türetilmiş GERÇEK başlangıç içeriğiyle, ${d.resp} dilinde oluştur. Yasak: boş dosyalar, yalnızca "TODO" içeren dosyalar, çözülmemiş placeholder'lar.
