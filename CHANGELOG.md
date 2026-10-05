@@ -2,6 +2,13 @@
 
 Bu proje Keep a Changelog yaklaşımını izler.
 
+## [2.0.1] — 2026-10-05
+
+### Fixed
+
+- Windows CRLF ve Linux LF satır sonlarını build sırasında normalize et; temiz Git arşivlerinde build:check hatasını önle.
+- CRLF/LF dağıtım regresyon testi eklendi. Toplam 49 test.
+
 ## [2.0.0] — 2026-10-05
 
 ### Added

@@ -1,6 +1,8 @@
-# Bootstrap Flow v2.0.0
+# Bootstrap Flow v2.0.1
 
 ## Changes
+
+Includes the v2.0.0 features below and fixes build verification for Windows CRLF and Linux LF source archives. The prompt template version remains 2.0.0.
 
 - Required-field copy gates and an approved-plan gate for Bootstrap.
 - Visible save/copy failures, save retry and manual copy guidance.
@@ -16,4 +18,4 @@ Download index.html and open it in your browser, or use the GitHub Pages demo. E
 
 ## Validation and limitations
 
-Build, syntax checks and all 48 tests passed locally. Browser smoke checks covered copy gates, copying, project switching, reload persistence, JSON import and 375/768/1280/1440 px layouts. The in-app browser did not report JSON download completion; direct file opening and full cross-browser/accessibility verification remain unverified. See VALIDATION.md for exact checks. External agent actions still require review; this application cannot enforce filesystem permissions or guarantee preservation.
+Build, syntax checks and all 49 tests passed locally. Browser smoke checks covered copy gates, copying, project switching, reload persistence, JSON import and 375/768/1280/1440 px layouts. The in-app browser did not report JSON download completion; direct file opening and full cross-browser/accessibility verification remain unverified. See VALIDATION.md for exact checks. External agent actions still require review; this application cannot enforce filesystem permissions or guarantee preservation.

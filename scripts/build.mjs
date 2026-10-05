@@ -28,7 +28,7 @@ const removeModuleSyntax = (source) =>
 const buildCoreBundle = async () => {
   const sources = await Promise.all(
     sourcePaths.map(async (sourcePath) => {
-      const source = await readFile(path.join(repositoryRoot, sourcePath), "utf8");
+      const source = (await readFile(path.join(repositoryRoot, sourcePath), "utf8")).replace(/\r\n/g, "\n");
       return `// Source: ${sourcePath}\n${removeModuleSyntax(source)}`;
     }),
   );
@@ -49,7 +49,7 @@ const replaceCoreBundle = (html, coreBundle) => {
   return `${beforeCore}\n${coreBundle}\n${afterCore}`;
 };
 
-const html = await readFile(indexPath, "utf8");
+const html = (await readFile(indexPath, "utf8")).replace(/\r\n/g, "\n");
 const coreBundle = await buildCoreBundle();
 const builtHtml = replaceCoreBundle(html, coreBundle);
 

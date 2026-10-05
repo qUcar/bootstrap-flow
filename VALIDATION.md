@@ -1,11 +1,11 @@
-# v2.0.0 doğrulama kaydı — 2026-10-05
+# v2.0.1 doğrulama kaydı — 2026-10-05
 
 Tüm denemelerde sentetik proje verileri kullanıldı.
 
 ## Otomatik kontroller
 
 - `npm.cmd run build`: başarılı; tek HTML yeniden üretildi.
-- `npm.cmd run verify`: başarılı; build güncelliği, tüm ESM kaynakları ve inline HTML JavaScript sözdizimi, 48 test.
+- `npm.cmd run verify`: başarılı; build güncelliği, tüm ESM kaynakları ve inline HTML JavaScript sözdizimi, 49 test.
 - `git diff --check`: başarılı.
 - Testler: 24 prompt kombinasyonu, deterministik çıktı, kaynak/HTML eşitliği, sürüm ve güven sınırı, zorunlu alan/plan kapısı, v1 taşıma, JSON roundtrip, geçersiz tür/sürüm/boyut, bozuk kayıt koruması, kayıt tekrar denemesi, profil geçişi/temizleme/silme, kopyalama fallback başarı/hata ve odak geri dönüşü.
 

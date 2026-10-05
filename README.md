@@ -1,6 +1,6 @@
 # Bootstrap Flow
 
-**Version 2.0.0**
+**Version 2.0.1**
 
 Türkçe: [README.tr.md](README.tr.md)
 
